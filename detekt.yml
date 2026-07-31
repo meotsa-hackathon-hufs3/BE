@@ -1,0 +1,12 @@
+# buildUponDefaultConfig=true 이므로 기본 규칙 전체 위에 아래 항목만 덮어쓴다.
+# 여기서 끄는 건 "코드 문제"가 아니라 Spring Boot 표준 코드에서 불가피하게 걸리는 규칙뿐이다.
+
+performance:
+  # runApplication<App>(*args) — 스프링 부트 코틀린 메인의 표준 코드라 스프레드 회피 불가
+  SpreadOperator:
+    active: false
+
+empty-blocks:
+  # 스프링 부트가 자동 생성하는 contextLoads() 테스트는 원래 비어 있는 게 정상
+  EmptyFunctionBlock:
+    active: false

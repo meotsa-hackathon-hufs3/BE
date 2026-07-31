@@ -50,7 +50,7 @@ kotlin {
 
 detekt {
     buildUponDefaultConfig = true
-    baseline = file("$projectDir/detekt-baseline.xml")
+    config.setFrom(files("$projectDir/detekt.yml"))
 }
 
 // detekt 1.23.x는 Kotlin 2.0.21로 컴파일돼 프로젝트의 Kotlin 2.2와 충돌한다.
