@@ -8,6 +8,8 @@ enum class Role(
     ;
 
     companion object {
-        fun of(key: String): Role = entries.first { it.key == key }
+        fun of(key: String): Role =
+            entries.firstOrNull { it.key == key }
+                ?: throw IllegalArgumentException("존재하지 않는 권한입니다: $key")
     }
 }

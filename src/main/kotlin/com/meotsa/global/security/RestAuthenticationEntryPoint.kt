@@ -12,10 +12,9 @@ import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 
 @Component
-class JwtAuthenticationEntryPoint(
+class RestAuthenticationEntryPoint(
     private val objectMapper: ObjectMapper,
 ) : AuthenticationEntryPoint {
-    // 토큰 없이 보호 경로 접근 등 Security가 자동으로 인증을 요구하는 경우.
     override fun commence(
         request: HttpServletRequest,
         response: HttpServletResponse,

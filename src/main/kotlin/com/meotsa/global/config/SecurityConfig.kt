@@ -3,7 +3,7 @@ package com.meotsa.global.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.meotsa.global.jwt.JWTFilter
 import com.meotsa.global.jwt.JWTTokenProvider
-import com.meotsa.global.security.JwtAuthenticationEntryPoint
+import com.meotsa.global.security.RestAuthenticationEntryPoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -20,7 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource
 class SecurityConfig(
     private val jwtTokenProvider: JWTTokenProvider,
     private val corsConfigurationSource: CorsConfigurationSource,
-    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val restAuthenticationEntryPoint: RestAuthenticationEntryPoint,
     private val objectMapper: ObjectMapper,
 ) {
     @Bean
@@ -41,7 +41,7 @@ class SecurityConfig(
             .addFilterBefore(
                 JWTFilter(jwtTokenProvider, objectMapper),
                 UsernamePasswordAuthenticationFilter::class.java,
-            ).exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint) }
+            ).exceptionHandling { it.authenticationEntryPoint(restAuthenticationEntryPoint) }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .cors { it.configurationSource(corsConfigurationSource) }
 
