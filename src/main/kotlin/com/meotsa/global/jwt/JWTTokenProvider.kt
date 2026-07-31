@@ -20,13 +20,14 @@ class JWTTokenProvider(
         )
     private val parser = Jwts.parser().verifyWith(secretKey).build()
 
-    fun getUsername(token: String): String = claims(token).subject
-
-    fun getRole(token: String): String = claims(token).get("role", String::class.java)
-
-    fun getCategory(token: String): String = claims(token).get("category", String::class.java)
-
-    fun isExpired(token: String) = claims(token).expiration.before(Date())
+    fun parse(token: String): TokenInfo {
+        val claims = parser.parseSignedClaims(token).payload
+        return TokenInfo(
+            username = claims.subject,
+            role = claims.get("role", String::class.java),
+            category = claims.get("category", String::class.java),
+        )
+    }
 
     fun createAccessToken(
         username: String,
@@ -55,6 +56,4 @@ class JWTTokenProvider(
             .signWith(secretKey)
             .compact()
     }
-
-    private fun claims(token: String) = parser.parseSignedClaims(token).payload
 }

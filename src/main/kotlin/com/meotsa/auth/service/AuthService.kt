@@ -9,9 +9,12 @@ import com.meotsa.auth.exception.AuthErrorCode
 import com.meotsa.global.exception.BusinessException
 import com.meotsa.global.jwt.JWTTokenProvider
 import com.meotsa.global.jwt.RefreshTokenStore
+import com.meotsa.global.jwt.TokenInfo
 import com.meotsa.user.entity.User
 import com.meotsa.user.exception.UserErrorCode
 import com.meotsa.user.repository.UserRepository
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.JwtException
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -55,12 +58,9 @@ class AuthService(
 
     fun reissue(request: ReissueRequest): TokenResponse {
         val refreshToken = request.refreshToken
-        validateRefreshToken(refreshToken)
+        val info = validateRefreshToken(refreshToken)
 
-        val username = jwtTokenProvider.getUsername(refreshToken)
-        val role = jwtTokenProvider.getRole(refreshToken)
-
-        val (newAccessToken, newRefreshToken) = issueTokens(username, role)
+        val (newAccessToken, newRefreshToken) = issueTokens(info.username, info.role)
         return TokenResponse(newAccessToken, newRefreshToken)
     }
 
@@ -78,20 +78,26 @@ class AuthService(
         return accessToken to refreshToken
     }
 
-    private fun validateRefreshToken(refreshToken: String) {
-        if (jwtTokenProvider.isExpired(refreshToken)) {
-            throw BusinessException(AuthErrorCode.EXPIRED_REFRESH_TOKEN)
-        }
-        if (jwtTokenProvider.getCategory(refreshToken) != "refresh") {
+    private fun validateRefreshToken(refreshToken: String): TokenInfo {
+        val info =
+            try {
+                jwtTokenProvider.parse(refreshToken)
+            } catch (e: ExpiredJwtException) {
+                throw BusinessException(AuthErrorCode.EXPIRED_REFRESH_TOKEN)
+            } catch (e: JwtException) {
+                throw BusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN)
+            }
+        if (info.category != "refresh") {
             throw BusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN)
         }
 
-        val username = jwtTokenProvider.getUsername(refreshToken)
         val savedToken =
-            refreshTokenStore.find(username)
+            refreshTokenStore.find(info.username)
                 ?: throw BusinessException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND)
         if (savedToken != refreshToken) {
             throw BusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN)
         }
+
+        return info
     }
 }
