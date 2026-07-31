@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-
     // @Valid 검증 실패 (@NotBlank 등)
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidation(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
-        val message = e.bindingResult.fieldErrors
-            .firstOrNull()
-            ?.defaultMessage
-            ?: "잘못된 요청입니다"
+        val message =
+            e.bindingResult.fieldErrors
+                .firstOrNull()
+                ?.defaultMessage
+                ?: "잘못된 요청입니다"
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse(message))

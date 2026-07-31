@@ -8,5 +8,4 @@ enum class UserErrorCode(
     override val message: String,
 ) : ErrorCode {
     DUPLICATE_USERNAME(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다"),
-    ;
 }

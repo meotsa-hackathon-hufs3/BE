@@ -7,12 +7,17 @@ import java.util.concurrent.ConcurrentHashMap
 class InMemoryRefreshTokenStore(
     private val jwtProperties: JwtProperties,
 ) : RefreshTokenStore {
-
-    private data class StoredToken(val token: String, val expiresAt: Long)
+    private data class StoredToken(
+        val token: String,
+        val expiresAt: Long,
+    )
 
     private val store = ConcurrentHashMap<String, StoredToken>()
 
-    override fun save(username: String, token: String) {
+    override fun save(
+        username: String,
+        token: String,
+    ) {
         val expiresAt = System.currentTimeMillis() + jwtProperties.refreshExpiration
         store[username] = StoredToken(token, expiresAt)
     }

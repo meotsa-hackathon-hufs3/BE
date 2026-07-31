@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 class CustomUserDetails(
     private val user: User,
 ) : UserDetails {
-
-    override fun getAuthorities(): Collection<GrantedAuthority> =
-        listOf(SimpleGrantedAuthority(user.role.key))
+    override fun getAuthorities(): Collection<GrantedAuthority> = listOf(SimpleGrantedAuthority(user.role.key))
 
     override fun getPassword(): String = user.password
 

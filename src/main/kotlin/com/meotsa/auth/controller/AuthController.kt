@@ -19,35 +19,29 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/auth")
 class AuthController(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) {
-
     @PostMapping("/register")
     fun register(
-        @Valid @RequestBody registerRequest: RegisterRequest
-    ): ResponseEntity<RegisterResponse> {
-        return ResponseEntity
+        @Valid @RequestBody registerRequest: RegisterRequest,
+    ): ResponseEntity<RegisterResponse> =
+        ResponseEntity
             .status(HttpStatus.CREATED)
             .body(authService.register(registerRequest))
-    }
 
     @PostMapping("/login")
     fun login(
-        @Valid @RequestBody loginRequest: LoginRequest
-    ): ResponseEntity<TokenResponse> {
-        return ResponseEntity.ok(authService.login(loginRequest))
-    }
+        @Valid @RequestBody loginRequest: LoginRequest,
+    ): ResponseEntity<TokenResponse> = ResponseEntity.ok(authService.login(loginRequest))
 
     @PostMapping("/reissue")
     fun reissue(
-        @Valid @RequestBody reissueRequest: ReissueRequest
-    ): ResponseEntity<TokenResponse> {
-        return ResponseEntity.ok(authService.reissue(reissueRequest))
-    }
+        @Valid @RequestBody reissueRequest: ReissueRequest,
+    ): ResponseEntity<TokenResponse> = ResponseEntity.ok(authService.reissue(reissueRequest))
 
     @PostMapping("/logout")
     fun logout(
-        @AuthenticationPrincipal userDetails: CustomUserDetails
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
     ): ResponseEntity<Void> {
         authService.logout(userDetails.username)
         return ResponseEntity.noContent().build()

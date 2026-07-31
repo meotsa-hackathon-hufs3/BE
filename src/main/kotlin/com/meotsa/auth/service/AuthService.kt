@@ -19,23 +19,22 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    val userRepository: UserRepository,
-    val passwordEncoder: PasswordEncoder,
-    val jwtTokenProvider: JWTTokenProvider,
-    val refreshTokenStore: RefreshTokenStore,
-    val authenticationManager: AuthenticationManager,
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtTokenProvider: JWTTokenProvider,
+    private val refreshTokenStore: RefreshTokenStore,
+    private val authenticationManager: AuthenticationManager,
 ) {
-
     fun register(request: RegisterRequest): RegisterResponse {
-
         if (userRepository.existsByUsername(request.username)) {
             throw BusinessException(UserErrorCode.DUPLICATE_USERNAME)
         }
 
-        val user = User(
-            username = request.username,
-            password = passwordEncoder.encode(request.password),
-        )
+        val user =
+            User(
+                username = request.username,
+                password = passwordEncoder.encode(request.password),
+            )
         val savedUser = userRepository.save(user)
 
         val (accessToken, refreshToken) = issueTokens(savedUser.username, savedUser.role.key)
@@ -43,10 +42,10 @@ class AuthService(
     }
 
     fun login(request: LoginRequest): TokenResponse {
-
-        val authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(request.username, request.password)
-        )
+        val authentication =
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(request.username, request.password),
+            )
         val username = authentication.name
         val role = authentication.authorities.first().authority
 
@@ -55,7 +54,6 @@ class AuthService(
     }
 
     fun reissue(request: ReissueRequest): TokenResponse {
-
         val refreshToken = request.refreshToken
         validateRefreshToken(refreshToken)
 
@@ -70,7 +68,10 @@ class AuthService(
         refreshTokenStore.delete(username)
     }
 
-    private fun issueTokens(username: String, role: String): Pair<String, String> {
+    private fun issueTokens(
+        username: String,
+        role: String,
+    ): Pair<String, String> {
         val accessToken = jwtTokenProvider.createAccessToken(username, role)
         val refreshToken = jwtTokenProvider.createRefreshToken(username, role)
         refreshTokenStore.save(username, refreshToken)
@@ -86,8 +87,9 @@ class AuthService(
         }
 
         val username = jwtTokenProvider.getUsername(refreshToken)
-        val savedToken = refreshTokenStore.find(username)
-            ?: throw BusinessException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND)
+        val savedToken =
+            refreshTokenStore.find(username)
+                ?: throw BusinessException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND)
         if (savedToken != refreshToken) {
             throw BusinessException(AuthErrorCode.INVALID_REFRESH_TOKEN)
         }

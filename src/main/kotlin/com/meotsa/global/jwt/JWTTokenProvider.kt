@@ -10,11 +10,14 @@ import javax.crypto.spec.SecretKeySpec
 class JWTTokenProvider(
     private val jwtProperties: JwtProperties,
 ) {
-
-    private val secretKey = SecretKeySpec(
-        jwtProperties.secret.toByteArray(StandardCharsets.UTF_8),
-        Jwts.SIG.HS256.key().build().algorithm
-    )
+    private val secretKey =
+        SecretKeySpec(
+            jwtProperties.secret.toByteArray(StandardCharsets.UTF_8),
+            Jwts.SIG.HS256
+                .key()
+                .build()
+                .algorithm,
+        )
     private val parser = Jwts.parser().verifyWith(secretKey).build()
 
     fun getUsername(token: String): String = claims(token).subject
@@ -25,15 +28,25 @@ class JWTTokenProvider(
 
     fun isExpired(token: String) = claims(token).expiration.before(Date())
 
-    fun createAccessToken(username: String, role: String): String =
-        createToken(username, role, "access", jwtProperties.accessExpiration)
+    fun createAccessToken(
+        username: String,
+        role: String,
+    ): String = createToken(username, role, "access", jwtProperties.accessExpiration)
 
-    fun createRefreshToken(username: String, role: String): String =
-        createToken(username, role, "refresh", jwtProperties.refreshExpiration)
+    fun createRefreshToken(
+        username: String,
+        role: String,
+    ): String = createToken(username, role, "refresh", jwtProperties.refreshExpiration)
 
-    private fun createToken(username: String, role: String, category: String, expiredMs: Long): String {
+    private fun createToken(
+        username: String,
+        role: String,
+        category: String,
+        expiredMs: Long,
+    ): String {
         val now = System.currentTimeMillis()
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .subject(username)
             .claim("role", role)
             .claim("category", category)
@@ -43,5 +56,5 @@ class JWTTokenProvider(
             .compact()
     }
 
-    private fun claims(token:String) = parser.parseSignedClaims(token).payload
+    private fun claims(token: String) = parser.parseSignedClaims(token).payload
 }

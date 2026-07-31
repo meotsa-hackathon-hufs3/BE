@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class SwaggerConfig {
-
     @Bean
     fun openAPI(): OpenAPI {
         val securitySchemeName = "bearerAuth"
@@ -21,8 +20,7 @@ class SwaggerConfig {
                     .title("Meotsa Hackathon API")
                     .description("멋사 해커톤 백엔드 API 문서")
                     .version("v1.0.0"),
-            )
-            .addSecurityItem(SecurityRequirement().addList(securitySchemeName))
+            ).addSecurityItem(SecurityRequirement().addList(securitySchemeName))
             .components(
                 Components().addSecuritySchemes(
                     securitySchemeName,

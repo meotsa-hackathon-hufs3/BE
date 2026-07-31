@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service
 class CustomUserDetailsService(
     private val userRepository: UserRepository,
 ) : UserDetailsService {
-
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByUsername(username)
-            ?: throw UsernameNotFoundException("존재하지 않는 아이디입니다.")
+        val user =
+            userRepository.findByUsername(username)
+                ?: throw UsernameNotFoundException("존재하지 않는 아이디입니다.")
 
         return CustomUserDetails(user)
     }
