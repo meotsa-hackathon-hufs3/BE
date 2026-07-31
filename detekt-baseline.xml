@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:MeotsaHackathonApplicationTests.kt$MeotsaHackathonApplicationTests${ }</ID>
+    <ID>MagicNumber:CorsConfig.kt$CorsConfig$3600L</ID>
+    <ID>MaxLineLength:SecurityConfig.kt$SecurityConfig$fun</ID>
+    <ID>ReturnCount:InMemoryRefreshTokenStore.kt$InMemoryRefreshTokenStore$override fun find(username: String): String?</ID>
+    <ID>ReturnCount:JWTFilter.kt$JWTFilter$override fun doFilterInternal( request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain, )</ID>
+    <ID>SpreadOperator:MeotsaHackathonApplication.kt$(*args)</ID>
+    <ID>SwallowedException:JWTFilter.kt$JWTFilter$e: ExpiredJwtException</ID>
+    <ID>SwallowedException:JWTFilter.kt$JWTFilter$e: JwtException</ID>
+    <ID>ThrowsCount:AuthService.kt$AuthService$private fun validateRefreshToken(refreshToken: String)</ID>
+    <ID>UnusedParameter:GlobalExceptionHandler.kt$GlobalExceptionHandler$e: AuthenticationException</ID>
+    <ID>UnusedParameter:GlobalExceptionHandler.kt$GlobalExceptionHandler$e: JwtException</ID>
+  </CurrentIssues>
+</SmellBaseline>

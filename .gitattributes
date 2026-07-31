@@ -1,0 +1,2 @@
+# 훅 스크립트는 항상 LF로 (Windows CRLF 커밋 방지 → git-bash 실행 오류 방지)
+.githooks/** text eol=lf

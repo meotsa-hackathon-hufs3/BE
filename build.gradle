@@ -4,6 +4,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.0'
     id 'org.jetbrains.kotlin.plugin.spring' version '2.2.0'
     id 'org.jetbrains.kotlin.plugin.jpa' version '2.2.0'
+    id 'org.jlleitschuh.gradle.ktlint' version '12.1.2'
+    id 'io.gitlab.arturbosch.detekt' version '1.23.8'
 }
 
 group = 'com.meotsa'
@@ -43,6 +45,25 @@ dependencies {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll '-Xjsr305=strict'
+    }
+}
+
+ktlint {
+    version = '1.5.0'
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    baseline = file("$projectDir/detekt-baseline.xml")
+}
+
+// detekt 1.23.x는 Kotlin 2.0.21로 컴파일돼 프로젝트의 Kotlin 2.2와 충돌한다.
+// detekt 전용 classpath의 Kotlin 버전을 2.0.21로 고정해 버전 가드를 통과시킨다.
+configurations.matching { it.name == 'detekt' }.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == 'org.jetbrains.kotlin') {
+            useVersion '2.0.21'
+        }
     }
 }
 

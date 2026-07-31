@@ -1,0 +1,6 @@
+#!/bin/sh
+cd "$(git rev-parse --show-toplevel)" || exit 1
+staged=$(git diff --cached --name-only --diff-filter=d -- '*.kt' '*.kts')
+[ -z "$staged" ] && exit 0
+./gradlew ktlintFormat --daemon || exit 1
+echo "$staged" | tr '\n' '\0' | xargs -0 git add
