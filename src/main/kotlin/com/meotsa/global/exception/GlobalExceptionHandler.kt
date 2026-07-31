@@ -1,7 +1,9 @@
 package com.meotsa.global.exception
 
+import io.jsonwebtoken.JwtException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -27,4 +29,18 @@ class GlobalExceptionHandler {
         ResponseEntity
             .status(e.errorCode.status)
             .body(ErrorResponse(e.errorCode.message))
+
+    // JWT 파싱/검증 실패 (만료·위조 등)
+    @ExceptionHandler(JwtException::class)
+    fun handleJwt(e: JwtException): ResponseEntity<ErrorResponse> =
+        ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ErrorResponse("유효하지 않은 토큰입니다"))
+
+    // 로그인 인증 실패 (아이디/비밀번호 불일치 등)
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthentication(e: AuthenticationException): ResponseEntity<ErrorResponse> =
+        ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ErrorResponse("아이디 또는 비밀번호가 올바르지 않습니다"))
 }

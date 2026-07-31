@@ -1,0 +1,50 @@
+package com.meotsa.global.config
+
+import com.meotsa.global.jwt.JWTFilter
+import com.meotsa.global.jwt.JWTTokenProvider
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfigurationSource
+
+@Configuration
+class SecurityConfig(
+    private val jwtTokenProvider: JWTTokenProvider,
+    private val corsConfigurationSource: CorsConfigurationSource,
+) {
+
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .csrf { it.disable() }
+            .formLogin { it.disable() }
+            .httpBasic { it.disable() }
+            .authorizeHttpRequests { it
+//                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+//                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/auth/logout").authenticated()
+                .anyRequest().permitAll() } // 나머지는 개발용으로 열어둠
+            .addFilterBefore(JWTFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .cors { it.configurationSource(corsConfigurationSource) }
+
+        return http.build()
+    }
+
+    @Bean
+    fun authenticationManager(
+        configuration: AuthenticationConfiguration
+    ): AuthenticationManager {
+        return configuration.authenticationManager
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+}
