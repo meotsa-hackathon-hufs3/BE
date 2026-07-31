@@ -1,6 +1,8 @@
 package com.meotsa.global.exception
 
+import com.meotsa.user.exception.UserErrorCode
 import io.jsonwebtoken.JwtException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.AuthenticationException
@@ -29,6 +31,13 @@ class GlobalExceptionHandler {
         ResponseEntity
             .status(e.errorCode.status)
             .body(ErrorResponse(e.errorCode.message))
+
+    // DB 유니크 제약 위반 (동시 가입 레이스 등 사전 체크를 우회한 경우)
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDataIntegrity(e: DataIntegrityViolationException): ResponseEntity<ErrorResponse> =
+        ResponseEntity
+            .status(UserErrorCode.DUPLICATE_USERNAME.status)
+            .body(ErrorResponse(UserErrorCode.DUPLICATE_USERNAME.message))
 
     // JWT 파싱/검증 실패 (만료·위조 등)
     @ExceptionHandler(JwtException::class)
