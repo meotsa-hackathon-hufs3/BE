@@ -1,23 +1,16 @@
 package com.meotsa.global.jwt
 
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 import java.util.Date
-import javax.crypto.spec.SecretKeySpec
 
 @Component
 class JWTTokenProvider(
     private val jwtProperties: JwtProperties,
 ) {
-    private val secretKey =
-        SecretKeySpec(
-            jwtProperties.secret.toByteArray(StandardCharsets.UTF_8),
-            Jwts.SIG.HS256
-                .key()
-                .build()
-                .algorithm,
-        )
+    private val secretKey = Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(StandardCharsets.UTF_8))
     private val parser = Jwts.parser().verifyWith(secretKey).build()
 
     fun parse(token: String): TokenInfo {
