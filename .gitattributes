@@ -1,2 +1,5 @@
+# 모든 텍스트 파일은 저장소에 LF로 저장하고 체크아웃 시에도 LF 유지
+* text=auto eol=lf
+
 # 훅 스크립트는 항상 LF로 (Windows CRLF 커밋 방지 → git-bash 실행 오류 방지)
 .githooks/** text eol=lf
