@@ -2,17 +2,13 @@
 
 이 저장소에서 작업할 때 아래 문서의 규칙과 컨벤션을 따른다.
 
-## 실행 명령어
+## 프로젝트
 @.claude/docs/build-and-run.md
-
-## 아키텍처
 @.claude/docs/architecture.md
 
-## 예외 처리
-@.claude/docs/exception.md
+## 코드 컨벤션
+@.claude/docs/convention.md
 
-## 커밋 컨벤션
+## Git
 @.claude/docs/commit.md
-
-## PR 컨벤션
 @.claude/docs/pull-request.md
