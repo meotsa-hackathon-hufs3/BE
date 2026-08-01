@@ -1,4 +1,4 @@
-package com.meotsa.auth.dto
+package com.meotsa.auth.dto.request
 
 import jakarta.validation.constraints.NotBlank
 

@@ -1,10 +1,10 @@
 package com.meotsa.auth.service
 
-import com.meotsa.auth.dto.LoginRequest
-import com.meotsa.auth.dto.RegisterRequest
-import com.meotsa.auth.dto.RegisterResponse
-import com.meotsa.auth.dto.ReissueRequest
-import com.meotsa.auth.dto.TokenResponse
+import com.meotsa.auth.dto.request.LoginRequest
+import com.meotsa.auth.dto.request.RegisterRequest
+import com.meotsa.auth.dto.request.ReissueRequest
+import com.meotsa.auth.dto.response.RegisterResponse
+import com.meotsa.auth.dto.response.TokenResponse
 import com.meotsa.auth.exception.AuthErrorCode
 import com.meotsa.global.exception.BusinessException
 import com.meotsa.global.jwt.JWTTokenProvider

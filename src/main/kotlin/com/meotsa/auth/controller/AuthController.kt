@@ -1,10 +1,10 @@
 package com.meotsa.auth.controller
 
-import com.meotsa.auth.dto.LoginRequest
-import com.meotsa.auth.dto.RegisterRequest
-import com.meotsa.auth.dto.RegisterResponse
-import com.meotsa.auth.dto.ReissueRequest
-import com.meotsa.auth.dto.TokenResponse
+import com.meotsa.auth.dto.request.LoginRequest
+import com.meotsa.auth.dto.request.RegisterRequest
+import com.meotsa.auth.dto.request.ReissueRequest
+import com.meotsa.auth.dto.response.RegisterResponse
+import com.meotsa.auth.dto.response.TokenResponse
 import com.meotsa.auth.service.AuthService
 import com.meotsa.global.security.CustomUserDetails
 import jakarta.validation.Valid
