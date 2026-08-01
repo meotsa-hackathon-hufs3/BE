@@ -17,6 +17,7 @@ spring:
 
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 jwt:
   secret: ${JWT_SECRET}
@@ -25,3 +26,6 @@ jwt:
 
 cors:
   allowed-origins: http://localhost:5173
+
+swagger:
+  server-url: ${SWAGGER_SERVER_URL:}
