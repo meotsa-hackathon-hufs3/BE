@@ -31,14 +31,16 @@ class SecurityConfig(
             .httpBasic { it.disable() }
             .authorizeHttpRequests {
                 it
-//                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
-//                .requestMatchers("/admin").hasRole("ADMIN")
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**")
+                    .permitAll()
+                    .requestMatchers("/actuator/health")
+                    .permitAll()
+//                    .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/auth/logout")
                     .authenticated()
                     .anyRequest()
-                    .permitAll()
-            } // 나머지는 개발용으로 열어둠
-            .addFilterBefore(
+                    .permitAll() // 나머지는 개발용으로 열어둠
+            }.addFilterBefore(
                 JWTFilter(jwtTokenProvider, objectMapper),
                 UsernamePasswordAuthenticationFilter::class.java,
             ).exceptionHandling { it.authenticationEntryPoint(restAuthenticationEntryPoint) }
