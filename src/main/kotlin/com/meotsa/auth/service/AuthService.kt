@@ -19,8 +19,10 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -28,6 +30,7 @@ class AuthService(
     private val refreshTokenStore: RefreshTokenStore,
     private val authenticationManager: AuthenticationManager,
 ) {
+    @Transactional
     fun register(request: RegisterRequest): RegisterResponse {
         if (userRepository.existsByUsername(request.username)) {
             throw BusinessException(UserErrorCode.DUPLICATE_USERNAME)
@@ -44,6 +47,7 @@ class AuthService(
         return RegisterResponse(savedUser.id!!, accessToken, refreshToken)
     }
 
+    @Transactional
     fun login(request: LoginRequest): TokenResponse {
         val authentication =
             authenticationManager.authenticate(
@@ -64,6 +68,7 @@ class AuthService(
         return TokenResponse(newAccessToken, newRefreshToken)
     }
 
+    @Transactional
     fun logout(username: String) {
         refreshTokenStore.delete(username)
     }
