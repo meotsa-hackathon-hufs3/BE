@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FileRepository : JpaRepository<UploadedFile, Long>
+interface FileRepository : JpaRepository<UploadedFile, Long> {
+    fun findByS3Key(s3Key: String): UploadedFile?
+}

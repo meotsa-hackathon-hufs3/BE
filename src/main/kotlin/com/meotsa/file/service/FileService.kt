@@ -45,29 +45,26 @@ class FileService(
         val uploadUrl = s3Presigner.presignPutObject(presignRequest).url().toString()
         val fileUrl = buildFileUrl(key)
 
-        val savedFile =
-            fileRepository.save(
-                UploadedFile(
-                    s3Key = key,
-                    originalFileName = request.fileName,
-                    contentType = request.contentType,
-                    fileUrl = fileUrl,
-                ),
-            )
+        fileRepository.save(
+            UploadedFile(
+                s3Key = key,
+                originalFileName = request.fileName,
+                contentType = request.contentType,
+                fileUrl = fileUrl,
+            ),
+        )
 
         return PresignedUploadResponse(
-            id = savedFile.id!!,
             uploadUrl = uploadUrl,
             key = key,
             fileUrl = fileUrl,
         )
     }
 
-    fun getFileUrl(id: Long): FileUrlResponse {
+    fun getFileUrl(key: String): FileUrlResponse {
         val file =
-            fileRepository
-                .findById(id)
-                .orElseThrow { BusinessException(FileErrorCode.FILE_NOT_FOUND) }
+            fileRepository.findByS3Key(key)
+                ?: throw BusinessException(FileErrorCode.FILE_NOT_FOUND)
         return FileUrlResponse(file.fileUrl)
     }
 
