@@ -41,5 +41,4 @@ bin/
 
 ### Local config (contains local DB credentials) ###
 **/application-local.yml
-**/application-local.yaml
-**/application-local.properties
+**/application-test.yml

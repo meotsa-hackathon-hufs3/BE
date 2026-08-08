@@ -31,6 +31,8 @@ aws:
   region: ap-northeast-2
   s3:
     bucket: meotsa-hackathon-s3
+  sqs:
+    queue-url: https://sqs.ap-northeast-2.amazonaws.com/303764379155/meotsa-3d-jobs.fifo
   cloudfront:
     domain: d15xvovmn68oyr.cloudfront.net
   credentials:

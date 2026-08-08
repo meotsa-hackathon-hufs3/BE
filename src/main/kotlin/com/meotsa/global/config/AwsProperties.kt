@@ -6,11 +6,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class AwsProperties(
     val region: String,
     val s3: S3,
+    val sqs: Sqs,
     val cloudfront: CloudFront,
     val credentials: Credentials,
 ) {
     data class S3(
         val bucket: String,
+    )
+
+    data class Sqs(
+        val queueUrl: String,
     )
 
     data class CloudFront(
