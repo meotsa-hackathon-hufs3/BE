@@ -1,10 +1,8 @@
 package com.meotsa.file.repository
 
-import com.meotsa.file.entity.File
+import com.meotsa.file.entity.Job
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FileRepository : JpaRepository<File, Long> {
-    fun findByS3Key(s3Key: String): File?
-}
+interface JobRepository : JpaRepository<Job, Long>

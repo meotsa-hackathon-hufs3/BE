@@ -3,7 +3,7 @@ package com.meotsa.file.service
 import com.meotsa.file.dto.request.PresignedUploadRequest
 import com.meotsa.file.dto.response.FileUrlResponse
 import com.meotsa.file.dto.response.PresignedUploadResponse
-import com.meotsa.file.entity.UploadedFile
+import com.meotsa.file.entity.File
 import com.meotsa.file.exception.FileErrorCode
 import com.meotsa.file.repository.FileRepository
 import com.meotsa.global.config.AwsProperties
@@ -45,12 +45,12 @@ class FileService(
         val uploadUrl = s3Presigner.presignPutObject(presignRequest).url().toString()
         val fileUrl = buildFileUrl(key)
 
+        // Todo: 사용자 정보 추가
         fileRepository.save(
-            UploadedFile(
+            File(
                 s3Key = key,
                 originalFileName = request.fileName,
                 contentType = request.contentType,
-                fileUrl = fileUrl,
             ),
         )
 
@@ -65,7 +65,7 @@ class FileService(
         val file =
             fileRepository.findByS3Key(key)
                 ?: throw BusinessException(FileErrorCode.FILE_NOT_FOUND)
-        return FileUrlResponse(file.fileUrl)
+        return FileUrlResponse(buildFileUrl(file.s3Key))
     }
 
     private fun buildFileUrl(key: String): String = "https://${awsProperties.cloudfront.domain}/$key"

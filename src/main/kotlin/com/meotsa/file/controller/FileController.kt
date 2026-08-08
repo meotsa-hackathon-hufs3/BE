@@ -32,5 +32,7 @@ class FileController(
     fun getDownloadUrl(
         @RequestParam key: String,
 //        @AuthenticationPrincipal userDetails: CustomUserDetails,
-    ): ResponseEntity<FileUrlResponse> = ResponseEntity.ok(fileService.getFileUrl(key))
+    ): ResponseEntity<FileUrlResponse> =
+        ResponseEntity
+            .ok(fileService.getFileUrl(key))
 }
