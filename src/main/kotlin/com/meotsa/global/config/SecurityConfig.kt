@@ -35,11 +35,10 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers("/actuator/health")
                     .permitAll()
-//                    .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/auth/logout")
                     .authenticated()
                     .anyRequest()
-                    .permitAll() // 나머지는 개발용으로 열어둠
+                    .permitAll() // 데모용(로그인 생략)
             }.addFilterBefore(
                 JWTFilter(jwtTokenProvider, objectMapper),
                 UsernamePasswordAuthenticationFilter::class.java,
