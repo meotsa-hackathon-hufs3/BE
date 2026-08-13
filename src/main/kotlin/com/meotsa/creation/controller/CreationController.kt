@@ -1,5 +1,6 @@
 package com.meotsa.creation.controller
 
+import com.meotsa.creation.docs.CreationSwaggerSpec
 import com.meotsa.creation.dto.response.CreationStartResponse
 import com.meotsa.creation.service.CreationService
 import org.springframework.http.HttpStatus
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/creations")
 class CreationController(
     private val creationService: CreationService,
-) {
+) : CreationSwaggerSpec {
     @PostMapping
-    fun startCreation(): ResponseEntity<CreationStartResponse> =
+    override fun startCreation(): ResponseEntity<CreationStartResponse> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(creationService.startCreation())
