@@ -1,7 +1,7 @@
-package com.meotsa.file.dto.response
+package com.meotsa.creation.dto.response
 
-import com.meotsa.file.entity.Job
-import com.meotsa.file.entity.JobStatus
+import com.meotsa.creation.entity.Job
+import com.meotsa.creation.entity.JobStatus
 
 data class JobStatusResponse(
     val status: JobStatus,

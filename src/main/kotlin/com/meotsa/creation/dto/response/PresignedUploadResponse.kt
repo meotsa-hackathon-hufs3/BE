@@ -1,4 +1,4 @@
-package com.meotsa.file.dto.response
+package com.meotsa.creation.dto.response
 
 data class PresignedUploadResponse(
     val uploadUrl: String,

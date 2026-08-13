@@ -1,9 +1,9 @@
-package com.meotsa.file.controller
+package com.meotsa.creation.controller
 
-import com.meotsa.file.dto.request.PresignedUploadRequest
-import com.meotsa.file.dto.response.FileUrlResponse
-import com.meotsa.file.dto.response.PresignedUploadResponse
-import com.meotsa.file.service.FileService
+import com.meotsa.creation.dto.request.PresignedUploadRequest
+import com.meotsa.creation.dto.response.FileUrlResponse
+import com.meotsa.creation.dto.response.PresignedUploadResponse
+import com.meotsa.creation.service.FileService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

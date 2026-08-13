@@ -1,11 +1,11 @@
-package com.meotsa.file.service
+package com.meotsa.creation.service
 
-import com.meotsa.file.dto.request.PresignedUploadRequest
-import com.meotsa.file.dto.response.FileUrlResponse
-import com.meotsa.file.dto.response.PresignedUploadResponse
-import com.meotsa.file.entity.File
-import com.meotsa.file.exception.FileErrorCode
-import com.meotsa.file.repository.FileRepository
+import com.meotsa.creation.dto.request.PresignedUploadRequest
+import com.meotsa.creation.dto.response.FileUrlResponse
+import com.meotsa.creation.dto.response.PresignedUploadResponse
+import com.meotsa.creation.entity.File
+import com.meotsa.creation.exception.FileErrorCode
+import com.meotsa.creation.repository.FileRepository
 import com.meotsa.global.config.AwsProperties
 import com.meotsa.global.exception.BusinessException
 import org.springframework.stereotype.Service

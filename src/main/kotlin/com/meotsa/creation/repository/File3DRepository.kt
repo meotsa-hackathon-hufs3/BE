@@ -1,7 +1,7 @@
-package com.meotsa.file.repository
+package com.meotsa.creation.repository
 
-import com.meotsa.file.entity.File
-import com.meotsa.file.entity.File3D
+import com.meotsa.creation.entity.File
+import com.meotsa.creation.entity.File3D
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

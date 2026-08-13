@@ -1,4 +1,4 @@
-package com.meotsa.file.entity
+package com.meotsa.creation.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

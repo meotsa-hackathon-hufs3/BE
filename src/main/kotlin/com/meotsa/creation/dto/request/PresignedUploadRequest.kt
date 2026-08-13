@@ -1,4 +1,4 @@
-package com.meotsa.file.dto.request
+package com.meotsa.creation.dto.request
 
 import jakarta.validation.constraints.NotBlank
 

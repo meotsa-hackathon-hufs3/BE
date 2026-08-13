@@ -1,4 +1,4 @@
-package com.meotsa.file.exception
+package com.meotsa.creation.exception
 
 import com.meotsa.global.exception.ErrorCode
 import org.springframework.http.HttpStatus

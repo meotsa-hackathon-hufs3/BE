@@ -1,10 +1,10 @@
-package com.meotsa.file.controller
+package com.meotsa.creation.controller
 
-import com.meotsa.file.dto.request.JobCreateRequest
-import com.meotsa.file.dto.request.JobResultRequest
-import com.meotsa.file.dto.response.JobCreateResponse
-import com.meotsa.file.dto.response.JobStatusResponse
-import com.meotsa.file.service.JobService
+import com.meotsa.creation.dto.request.JobCreateRequest
+import com.meotsa.creation.dto.request.JobResultRequest
+import com.meotsa.creation.dto.response.JobCreateResponse
+import com.meotsa.creation.dto.response.JobStatusResponse
+import com.meotsa.creation.service.JobService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
