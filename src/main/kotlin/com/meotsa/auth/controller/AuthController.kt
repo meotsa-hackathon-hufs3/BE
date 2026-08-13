@@ -1,5 +1,6 @@
 package com.meotsa.auth.controller
 
+import com.meotsa.auth.controller.docs.AuthSwaggerSpec
 import com.meotsa.auth.dto.request.LoginRequest
 import com.meotsa.auth.dto.request.RegisterRequest
 import com.meotsa.auth.dto.request.ReissueRequest
@@ -20,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/auth")
 class AuthController(
     private val authService: AuthService,
-) {
+) : AuthSwaggerSpec {
     @PostMapping("/register")
-    fun register(
+    override fun register(
         @Valid @RequestBody registerRequest: RegisterRequest,
     ): ResponseEntity<RegisterResponse> =
         ResponseEntity
@@ -30,17 +31,17 @@ class AuthController(
             .body(authService.register(registerRequest))
 
     @PostMapping("/login")
-    fun login(
+    override fun login(
         @Valid @RequestBody loginRequest: LoginRequest,
     ): ResponseEntity<TokenResponse> = ResponseEntity.ok(authService.login(loginRequest))
 
     @PostMapping("/reissue")
-    fun reissue(
+    override fun reissue(
         @Valid @RequestBody reissueRequest: ReissueRequest,
     ): ResponseEntity<TokenResponse> = ResponseEntity.ok(authService.reissue(reissueRequest))
 
     @PostMapping("/logout")
-    fun logout(
+    override fun logout(
         @AuthenticationPrincipal userDetails: CustomUserDetails,
     ): ResponseEntity<Void> {
         authService.logout(userDetails.username)
