@@ -11,17 +11,19 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "creation")
-class Creation(
-    @Column(name = "original_image_key")
-    var originalImageKey: String? = null,
-    @Column(name = "stylized_image_key")
-    var stylizedImageKey: String? = null,
-    @Column(name = "model_key")
-    var modelKey: String? = null,
-) {
+class Creation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+
+    @Column(name = "original_image_key")
+    var originalImageKey: String? = null
+
+    @Column(name = "stylized_image_key")
+    var stylizedImageKey: String? = null
+
+    @Column(name = "model_key")
+    var modelKey: String? = null
 
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
@@ -32,5 +34,17 @@ class Creation(
     @PreUpdate
     fun onUpdate() {
         updatedAt = LocalDateTime.now()
+    }
+
+    fun stylize(
+        originalImageKey: String,
+        stylizedImageKey: String,
+    ) {
+        this.originalImageKey = originalImageKey
+        this.stylizedImageKey = stylizedImageKey
+    }
+
+    fun reStylize(stylizedImageKey: String) {
+        this.stylizedImageKey = stylizedImageKey
     }
 }
