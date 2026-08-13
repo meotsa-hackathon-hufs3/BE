@@ -5,6 +5,7 @@ import com.meotsa.auth.dto.request.RegisterRequest
 import com.meotsa.auth.dto.request.ReissueRequest
 import com.meotsa.auth.dto.response.RegisterResponse
 import com.meotsa.auth.dto.response.TokenResponse
+import com.meotsa.auth.dto.response.UsernameAvailabilityResponse
 import com.meotsa.global.docs.UnauthorizedApiResponse
 import com.meotsa.global.exception.ErrorResponse
 import com.meotsa.global.security.CustomUserDetails
@@ -23,13 +24,15 @@ import org.springframework.http.ResponseEntity
 interface AuthSwaggerSpec {
     @Operation(
         summary = "회원가입",
-        description = "아이디·비밀번호로 회원을 생성하고 액세스·리프레시 토큰을 발급한다.",
+        description =
+            "아이디·비밀번호로 회원을 생성하고 액세스·리프레시 토큰을 발급한다. " +
+                "비밀번호는 8자 이상이며 영문·숫자·특수문자를 각각 1자 이상 포함해야 한다.",
     )
     @ApiResponses(
         ApiResponse(responseCode = "201", description = "회원가입 성공"),
         ApiResponse(
             responseCode = "400",
-            description = "입력값 검증 실패 (아이디·비밀번호 누락, 비밀번호 8자 미만)",
+            description = "입력값 검증 실패 (아이디·비밀번호 누락, 비밀번호 형식 위반)",
             content = [
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
@@ -43,8 +46,8 @@ interface AuthSwaggerSpec {
                             value = """{"code": "INVALID_INPUT", "message": "비밀번호는 필수입니다"}""",
                         ),
                         ExampleObject(
-                            name = "INVALID_INPUT (비밀번호 8자 미만)",
-                            value = """{"code": "INVALID_INPUT", "message": "비밀번호는 8자 이상이어야 합니다"}""",
+                            name = "INVALID_INPUT (비밀번호 형식 위반)",
+                            value = """{"code": "INVALID_INPUT", "message": "비밀번호는 8자 이상이며 영문, 숫자, 특수문자를 각각 1자 이상 포함해야 합니다"}""",
                         ),
                     ],
                 ),
@@ -65,6 +68,32 @@ interface AuthSwaggerSpec {
     )
     @SecurityRequirements
     fun register(registerRequest: RegisterRequest): ResponseEntity<RegisterResponse>
+
+    @Operation(
+        summary = "아이디 중복 확인",
+        description =
+            "아이디 사용 가능 여부를 조회한다. 이미 존재하는 아이디여도 200으로 응답하며 `available: false`로 구분한다. ",
+    )
+    @ApiResponses(
+        ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = [
+                Content(
+                    schema = Schema(implementation = UsernameAvailabilityResponse::class),
+                    examples = [
+                        ExampleObject(name = "사용 가능", value = """{"available": true}"""),
+                        ExampleObject(name = "이미 존재하는 아이디", value = """{"available": false}"""),
+                    ],
+                ),
+            ],
+        ),
+    )
+    @SecurityRequirements
+    fun checkUsernameAvailability(
+        @Parameter(description = "중복 확인할 아이디", required = true, example = "test123")
+        username: String,
+    ): ResponseEntity<UsernameAvailabilityResponse>
 
     @Operation(
         summary = "로그인",

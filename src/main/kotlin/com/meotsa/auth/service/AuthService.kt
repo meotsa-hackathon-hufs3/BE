@@ -5,6 +5,7 @@ import com.meotsa.auth.dto.request.RegisterRequest
 import com.meotsa.auth.dto.request.ReissueRequest
 import com.meotsa.auth.dto.response.RegisterResponse
 import com.meotsa.auth.dto.response.TokenResponse
+import com.meotsa.auth.dto.response.UsernameAvailabilityResponse
 import com.meotsa.auth.exception.AuthErrorCode
 import com.meotsa.global.exception.BusinessException
 import com.meotsa.global.jwt.JWTTokenProvider
@@ -48,6 +49,8 @@ class AuthService(
         val (accessToken, refreshToken) = issueTokens(user.username, user.role.key)
         return RegisterResponse(user.id!!, accessToken, refreshToken)
     }
+
+    fun checkUsernameAvailability(username: String) = UsernameAvailabilityResponse(!userRepository.existsByUsername(username))
 
     @Transactional
     fun login(request: LoginRequest): TokenResponse {

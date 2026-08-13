@@ -22,7 +22,6 @@ class FileController(
     @PostMapping("/presigned-upload")
     fun createPresignedUpload(
         @Valid @RequestBody request: PresignedUploadRequest,
-//        @AuthenticationPrincipal userDetails: CustomUserDetails,
     ): ResponseEntity<PresignedUploadResponse> =
         ResponseEntity
             .status(HttpStatus.CREATED)
@@ -31,7 +30,6 @@ class FileController(
     @GetMapping("/download-url")
     fun getDownloadUrl(
         @RequestParam key: String,
-//        @AuthenticationPrincipal userDetails: CustomUserDetails,
     ): ResponseEntity<FileUrlResponse> =
         ResponseEntity
             .ok(fileService.getFileUrl(key))

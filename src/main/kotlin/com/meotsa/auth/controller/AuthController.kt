@@ -6,15 +6,18 @@ import com.meotsa.auth.dto.request.RegisterRequest
 import com.meotsa.auth.dto.request.ReissueRequest
 import com.meotsa.auth.dto.response.RegisterResponse
 import com.meotsa.auth.dto.response.TokenResponse
+import com.meotsa.auth.dto.response.UsernameAvailabilityResponse
 import com.meotsa.auth.service.AuthService
 import com.meotsa.global.security.CustomUserDetails
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -29,6 +32,14 @@ class AuthController(
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(authService.register(registerRequest))
+
+    @GetMapping("/username/availability")
+    override fun checkUsernameAvailability(
+        @RequestParam username: String,
+    ): ResponseEntity<UsernameAvailabilityResponse> =
+        ResponseEntity
+            .ok()
+            .body(authService.checkUsernameAvailability(username))
 
     @PostMapping("/login")
     override fun login(
