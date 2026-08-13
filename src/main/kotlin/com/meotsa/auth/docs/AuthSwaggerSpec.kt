@@ -1,4 +1,4 @@
-package com.meotsa.auth.controller.docs
+package com.meotsa.auth.docs
 
 import com.meotsa.auth.dto.request.LoginRequest
 import com.meotsa.auth.dto.request.RegisterRequest
