@@ -14,9 +14,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "3D_file")
 class File3D(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file", nullable = false)
     val imageFile: File,
@@ -26,4 +23,8 @@ class File3D(
     val contentType: String,
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
-)
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+}

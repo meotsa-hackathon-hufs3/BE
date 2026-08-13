@@ -11,9 +11,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "file")
 class File(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
     @Column(name = "s3_key", nullable = false, unique = true)
     val s3Key: String,
     @Column(nullable = false)
@@ -22,4 +19,8 @@ class File(
     val contentType: String,
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
-)
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+}

@@ -35,16 +35,18 @@ class AuthService(
         if (userRepository.existsByUsername(request.username)) {
             throw BusinessException(UserErrorCode.DUPLICATE_USERNAME)
         }
+        // Todo: 동시 요청 시 existsBy 체크가 뚫리므로 DataIntegrityViolationException 처리 필요
 
         val user =
-            User(
-                username = request.username,
-                password = passwordEncoder.encode(request.password),
+            userRepository.save(
+                User(
+                    username = request.username,
+                    password = passwordEncoder.encode(request.password),
+                ),
             )
-        val savedUser = userRepository.save(user)
 
-        val (accessToken, refreshToken) = issueTokens(savedUser.username, savedUser.role.key)
-        return RegisterResponse(savedUser.id!!, accessToken, refreshToken)
+        val (accessToken, refreshToken) = issueTokens(user.username, user.role.key)
+        return RegisterResponse(user.id!!, accessToken, refreshToken)
     }
 
     @Transactional

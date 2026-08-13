@@ -31,7 +31,7 @@ class AuthService(...) {
 ## Entity
 
 - JPA `@Entity` + `@Table(name = "...")`.
-- PK는 `val id: Long? = null` + `@GeneratedValue(strategy = GenerationType.IDENTITY)`.
+- PK는 생성자가 아닌 **클래스 본문**에 `var id: Long? = null` + `@GeneratedValue(strategy = GenerationType.IDENTITY)`로 선언한다. 생성자에는 비즈니스상 필요한 필드만 둔다.
 - enum 필드는 `@Enumerated(EnumType.STRING)`.
 
 ## DTO
