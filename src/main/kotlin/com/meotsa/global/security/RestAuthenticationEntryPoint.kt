@@ -1,10 +1,11 @@
 package com.meotsa.global.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.meotsa.global.exception.ErrorCode
 import com.meotsa.global.exception.ErrorResponse
+import com.meotsa.global.exception.GlobalErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
@@ -20,19 +21,19 @@ class RestAuthenticationEntryPoint(
         response: HttpServletResponse,
         authException: AuthenticationException,
     ) {
-        write(response, objectMapper, "인증이 필요합니다")
+        write(response, objectMapper, GlobalErrorCode.UNAUTHENTICATED)
     }
 
     companion object {
         fun write(
             response: HttpServletResponse,
             objectMapper: ObjectMapper,
-            message: String,
+            errorCode: ErrorCode,
         ) {
-            response.status = HttpStatus.UNAUTHORIZED.value()
+            response.status = errorCode.status.value()
             response.contentType = MediaType.APPLICATION_JSON_VALUE
             response.characterEncoding = StandardCharsets.UTF_8.name()
-            response.writer.write(objectMapper.writeValueAsString(ErrorResponse(message)))
+            response.writer.write(objectMapper.writeValueAsString(ErrorResponse(errorCode.code, errorCode.message)))
         }
     }
 }

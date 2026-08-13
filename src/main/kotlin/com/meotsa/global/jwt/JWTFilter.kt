@@ -1,6 +1,7 @@
 package com.meotsa.global.jwt
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.meotsa.global.exception.GlobalErrorCode
 import com.meotsa.global.security.CustomUserDetails
 import com.meotsa.global.security.RestAuthenticationEntryPoint
 import com.meotsa.user.entity.Role
@@ -35,7 +36,7 @@ class JWTFilter(
         try {
             val info = jwtTokenProvider.parse(token)
             if (info.category != "access") {
-                RestAuthenticationEntryPoint.write(response, objectMapper, "유효하지 않은 토큰입니다")
+                RestAuthenticationEntryPoint.write(response, objectMapper, GlobalErrorCode.INVALID_TOKEN)
                 return
             }
 
@@ -55,13 +56,13 @@ class JWTFilter(
 
             SecurityContextHolder.getContext().authentication = authToken
         } catch (e: ExpiredJwtException) {
-            RestAuthenticationEntryPoint.write(response, objectMapper, "만료된 토큰입니다")
+            RestAuthenticationEntryPoint.write(response, objectMapper, GlobalErrorCode.EXPIRED_TOKEN)
             return
         } catch (e: JwtException) {
-            RestAuthenticationEntryPoint.write(response, objectMapper, "유효하지 않은 토큰입니다")
+            RestAuthenticationEntryPoint.write(response, objectMapper, GlobalErrorCode.INVALID_TOKEN)
             return
         } catch (e: IllegalArgumentException) {
-            RestAuthenticationEntryPoint.write(response, objectMapper, "유효하지 않은 토큰입니다")
+            RestAuthenticationEntryPoint.write(response, objectMapper, GlobalErrorCode.INVALID_TOKEN)
             return
         }
 

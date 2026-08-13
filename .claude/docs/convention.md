@@ -45,8 +45,10 @@ class AuthService(...) {
 
 1. **도메인별 에러 코드**: `enum class XxxErrorCode : ErrorCode`로 정의하고 `status: HttpStatus`, `message: String`을 오버라이드한다.
    - 위치: `{domain}/exception/` (예: `AuthErrorCode`, `UserErrorCode`)
-   - 여러 도메인이 공유하는 공통 에러는 `global/exception/`에 둔다.
+   - 여러 도메인이 공유하는 공통 에러는 `global/exception/`의 `GlobalErrorCode`에 둔다.
+   - `ErrorCode.code`는 enum 이름을 그대로 쓰도록 기본 구현되어 있으므로 별도로 오버라이드하지 않는다. 반드시 **enum**으로 구현한다.
 2. **예외 발생**: 비즈니스 로직에서는 `throw BusinessException(XxxErrorCode.SOME_CASE)`.
-3. **변환**: `GlobalExceptionHandler`(`@RestControllerAdvice`)가 잡아서 `ErrorResponse(message)` (JSON `{ "message": "..." }`)로 변환한다.
+3. **변환**: `GlobalExceptionHandler`(`@RestControllerAdvice`)가 잡아서 `ErrorResponse(code, message)` (JSON `{ "code": "SOME_CASE", "message": "..." }`)로 변환한다.
+   - HTTP 상태는 `ErrorCode.status`가 결정하고, 바디의 `code`는 클라이언트가 같은 상태 코드 안에서 분기할 때 쓴다.
 
 새 에러 상황이 생기면 해당 도메인의 `ErrorCode`에 케이스를 추가한 뒤 `BusinessException`으로 던진다.

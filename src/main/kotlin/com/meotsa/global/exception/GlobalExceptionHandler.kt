@@ -1,7 +1,6 @@
 package com.meotsa.global.exception
 
 import io.jsonwebtoken.JwtException
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.AuthenticationException
@@ -18,37 +17,32 @@ class GlobalExceptionHandler {
             e.bindingResult.fieldErrors
                 .firstOrNull()
                 ?.defaultMessage
-                ?: "잘못된 요청입니다"
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse(message))
+                ?: GlobalErrorCode.INVALID_INPUT.message
+        return toResponse(GlobalErrorCode.INVALID_INPUT, message)
     }
 
     // 요청 본문 누락·JSON 파싱 실패
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleNotReadable(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> =
-        ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse("요청 본문이 올바르지 않습니다"))
-
-    // 비즈니스 예외 (ErrorCode 기반)
-    @ExceptionHandler(BusinessException::class)
-    fun handleBusiness(e: BusinessException): ResponseEntity<ErrorResponse> =
-        ResponseEntity
-            .status(e.errorCode.status)
-            .body(ErrorResponse(e.errorCode.message))
+        toResponse(GlobalErrorCode.INVALID_REQUEST_BODY)
 
     // JWT 파싱/검증 실패 (만료·위조 등)
     @ExceptionHandler(JwtException::class)
-    fun handleJwt(e: JwtException): ResponseEntity<ErrorResponse> =
-        ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(ErrorResponse("유효하지 않은 토큰입니다"))
+    fun handleJwt(e: JwtException): ResponseEntity<ErrorResponse> = toResponse(GlobalErrorCode.INVALID_TOKEN)
 
     // 로그인 인증 실패 (아이디/비밀번호 불일치 등)
     @ExceptionHandler(AuthenticationException::class)
-    fun handleAuthentication(e: AuthenticationException): ResponseEntity<ErrorResponse> =
+    fun handleAuthentication(e: AuthenticationException): ResponseEntity<ErrorResponse> = toResponse(GlobalErrorCode.INVALID_CREDENTIALS)
+
+    // 비즈니스 예외 (ErrorCode 기반)
+    @ExceptionHandler(BusinessException::class)
+    fun handleBusiness(e: BusinessException): ResponseEntity<ErrorResponse> = toResponse(e.errorCode)
+
+    private fun toResponse(
+        errorCode: ErrorCode,
+        message: String = errorCode.message,
+    ): ResponseEntity<ErrorResponse> =
         ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(ErrorResponse("아이디 또는 비밀번호가 올바르지 않습니다"))
+            .status(errorCode.status)
+            .body(ErrorResponse(errorCode.code, message))
 }
