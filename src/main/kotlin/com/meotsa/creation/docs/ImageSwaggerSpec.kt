@@ -31,7 +31,7 @@ interface ImageSwaggerSpec {
                     schema = Schema(implementation = StylizedImageResponse::class),
                     examples = [
                         ExampleObject(
-                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_6f1c2a3e"}""",
+                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/stylized_6f1c2a3e.png"}""",
                         ),
                     ],
                 ),
@@ -71,7 +71,7 @@ interface ImageSwaggerSpec {
                     schema = Schema(implementation = StylizedImageResponse::class),
                     examples = [
                         ExampleObject(
-                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_2c9e5b71"}""",
+                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/stylized_2c9e5b71.png"}""",
                         ),
                     ],
                 ),

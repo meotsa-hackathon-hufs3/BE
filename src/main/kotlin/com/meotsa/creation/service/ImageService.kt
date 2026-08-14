@@ -26,8 +26,9 @@ class ImageService(
             creationRepository.findByIdOrNull(creationId)
                 ?: throw BusinessException(CreationErrorCode.CREATION_NOT_FOUND)
 
-        val stylizedImageKey = generateStylizedImageKey(creationId)
         // TODO: AI API로 StylizedImage 생성
+        // val stylizedImageKey = generateStylizedImageKey(creationId)
+        val stylizedImageKey = request.originalImageKey // 임시: 원본 이미지를 그대로 사용
         creation.stylize(request.originalImageKey, stylizedImageKey)
 
         return StylizedImageResponse(
@@ -41,11 +42,13 @@ class ImageService(
             creationRepository.findByIdOrNull(creationId)
                 ?: throw BusinessException(CreationErrorCode.CREATION_NOT_FOUND)
 
-        creation.originalImageKey
-            ?: throw BusinessException(CreationErrorCode.STYLIZE_NOT_STARTED)
+        val originalImageKey =
+            creation.originalImageKey
+                ?: throw BusinessException(CreationErrorCode.STYLIZE_NOT_STARTED)
 
-        val stylizedImageKey = generateStylizedImageKey(creationId)
         // TODO: AI API로 StylizedImage 생성
+        // val stylizedImageKey = generateStylizedImageKey(creationId)
+        val stylizedImageKey = originalImageKey // 임시: 원본 이미지를 그대로 사용
         creation.reStylize(stylizedImageKey)
 
         return StylizedImageResponse(
@@ -54,5 +57,5 @@ class ImageService(
     }
 
     private fun generateStylizedImageKey(creationId: Long): String =
-        "creations/$creationId/StylizedImage_${UUID.randomUUID().toString().take(8)}"
+        "creations/$creationId/stylized_${UUID.randomUUID().toString().take(8)}.png"
 }
