@@ -1,6 +1,6 @@
 package com.meotsa.auth.controller
 
-import com.meotsa.auth.controller.docs.AuthSwaggerSpec
+import com.meotsa.auth.docs.AuthSwaggerSpec
 import com.meotsa.auth.dto.request.LoginRequest
 import com.meotsa.auth.dto.request.RegisterRequest
 import com.meotsa.auth.dto.request.ReissueRequest

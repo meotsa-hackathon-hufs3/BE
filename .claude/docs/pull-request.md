@@ -31,10 +31,6 @@
 
 ## PR 본문
 
-`.github/PULL_REQUEST_TEMPLATE.md` 템플릿을 따른다 (개요 / 변경 사항 / 참고).
+아래 템플릿의 섹션 구성과 각 섹션 주석의 작성 지침을 따른다.
 
-**참고(이슈 연결)**
-
-- `Refs #(이슈 번호)` — 이슈 작업 중 부분 PR
-- `Closes #(이슈 번호)` — 해당 PR로 이슈 해결 시
-- 없을 경우 생략
+@.github/PULL_REQUEST_TEMPLATE.md

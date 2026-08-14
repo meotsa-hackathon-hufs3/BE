@@ -20,7 +20,9 @@ data class AwsProperties(
 
     data class CloudFront(
         val domain: String,
-    )
+    ) {
+        fun urlOf(key: String) = "https://$domain/$key"
+    }
 
     data class Credentials(
         val accessKey: String,
