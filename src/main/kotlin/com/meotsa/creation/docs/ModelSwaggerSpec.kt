@@ -27,7 +27,7 @@ interface ModelSwaggerSpec {
     )
     @ApiResponses(
         ApiResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "작업 등록 성공",
             content = [
                 Content(

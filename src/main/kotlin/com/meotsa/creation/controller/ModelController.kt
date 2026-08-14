@@ -7,6 +7,7 @@ import com.meotsa.creation.dto.response.JobCreateResponse
 import com.meotsa.creation.dto.response.JobStatusResponse
 import com.meotsa.creation.service.ModelService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,7 +28,7 @@ class ModelController(
         @Valid @RequestBody request: JobCreateRequest,
     ): ResponseEntity<JobCreateResponse> =
         ResponseEntity
-            .ok()
+            .status(HttpStatus.CREATED)
             .body(modelService.createJob(creationId, request))
 
     @GetMapping("/{jobId}")
