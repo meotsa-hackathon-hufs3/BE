@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated
 data class ModelOption(
     @Enumerated(EnumType.STRING)
     val productType: ProductType,
+    val size: Int,
     val amount: Int,
     @Enumerated(EnumType.STRING)
     val material: MaterialType,

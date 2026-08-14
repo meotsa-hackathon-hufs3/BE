@@ -9,6 +9,7 @@ import com.meotsa.creation.entity.ProductType
 data class JobStatusResponse(
     val status: JobStatus,
     val productType: ProductType,
+    val size: Int,
     val amount: Int,
     val material: MaterialType,
     val color: ColorType,
@@ -25,6 +26,7 @@ data class JobStatusResponse(
         ) = JobStatusResponse(
             status = job.status,
             productType = job.option.productType,
+            size = job.option.size,
             amount = job.option.amount,
             material = job.option.material,
             color = job.option.color,

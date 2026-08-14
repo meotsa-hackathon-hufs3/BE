@@ -22,7 +22,8 @@ interface ModelSwaggerSpec {
         summary = "3D 모델 생성 요청",
         description =
             "스타일 변환이 완료된 이미지와 선택한 옵션으로 3D 모델 생성 작업을 등록하고 `jobId`를 발급한다. " +
-                "실제 생성은 비동기로 진행되므로, 이후 조회 API로 상태를 확인한다.",
+                "실제 생성은 비동기로 진행되므로, 이후 조회 API로 상태를 확인한다. " +
+                "`size`는 모델의 크기(mm)이며 `50`·`80`만 사용한다.",
     )
     @ApiResponses(
         ApiResponse(
@@ -88,6 +89,7 @@ interface ModelSwaggerSpec {
                                 {
                                   "status": "PENDING",
                                   "productType": "FIGURE",
+                                  "size": 50,
                                   "amount": 1,
                                   "material": "PLA",
                                   "color": "FULL_COLOR"
@@ -100,6 +102,7 @@ interface ModelSwaggerSpec {
                                 {
                                   "status": "COMPLETED",
                                   "productType": "FIGURE",
+                                  "size": 50,
                                   "amount": 1,
                                   "material": "PLA",
                                   "color": "FULL_COLOR",
@@ -116,6 +119,7 @@ interface ModelSwaggerSpec {
                                 {
                                   "status": "FAILED",
                                   "productType": "FIGURE",
+                                  "size": 50,
                                   "amount": 1,
                                   "material": "PLA",
                                   "color": "FULL_COLOR",
