@@ -103,7 +103,7 @@ interface ModelSwaggerSpec {
                                   "amount": 1,
                                   "material": "PLA",
                                   "color": "FULL_COLOR",
-                                  "modelUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/Model_6f1c2a3e",
+                                  "modelUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/model_6f1c2a3e.stl",
                                   "structureCheck": true,
                                   "widthCheck": true,
                                   "expectedFee": 32000

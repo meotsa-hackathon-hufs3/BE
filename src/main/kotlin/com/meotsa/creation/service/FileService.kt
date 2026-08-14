@@ -1,11 +1,9 @@
 package com.meotsa.creation.service
 
 import com.meotsa.creation.dto.request.PresignedUploadRequest
-import com.meotsa.creation.dto.response.FileUrlResponse
 import com.meotsa.creation.dto.response.PresignedUploadResponse
-import com.meotsa.creation.entity.File
-import com.meotsa.creation.exception.FileErrorCode
-import com.meotsa.creation.repository.FileRepository
+import com.meotsa.creation.entity.UploadPurpose
+import com.meotsa.creation.exception.CreationErrorCode
 import com.meotsa.global.config.AwsProperties
 import com.meotsa.global.exception.BusinessException
 import org.springframework.stereotype.Service
@@ -21,11 +19,18 @@ import java.util.UUID
 class FileService(
     private val s3Presigner: S3Presigner,
     private val awsProperties: AwsProperties,
-    private val fileRepository: FileRepository,
 ) {
-    @Transactional
     fun createPresignedUpload(request: PresignedUploadRequest): PresignedUploadResponse {
-        val key = "uploads/${UUID.randomUUID()}${extractExtension(request.fileName)}"
+        val prefix =
+            when (request.purpose) {
+                UploadPurpose.ORIGINAL_IMAGE -> "original"
+                UploadPurpose.STYLIZED_IMAGE -> "stylized"
+                UploadPurpose.MODEL -> "model"
+            }
+
+        val suffix = UUID.randomUUID().toString().take(8)
+        val extension = extractExtension(request.contentType)
+        val key = "creations/${request.creationId}/${prefix}_$suffix$extension"
 
         val putObjectRequest =
             PutObjectRequest
@@ -45,15 +50,6 @@ class FileService(
         val uploadUrl = s3Presigner.presignPutObject(presignRequest).url().toString()
         val fileUrl = awsProperties.cloudfront.urlOf(key)
 
-        // Todo: 사용자 정보 추가
-        fileRepository.save(
-            File(
-                s3Key = key,
-                originalFileName = request.fileName,
-                contentType = request.contentType,
-            ),
-        )
-
         return PresignedUploadResponse(
             uploadUrl = uploadUrl,
             key = key,
@@ -61,18 +57,11 @@ class FileService(
         )
     }
 
-    fun getFileUrl(key: String): FileUrlResponse {
-        val file =
-            fileRepository.findByS3Key(key)
-                ?: throw BusinessException(FileErrorCode.FILE_NOT_FOUND)
-        return FileUrlResponse(awsProperties.cloudfront.urlOf(file.s3Key))
-    }
-
-    private fun extractExtension(fileName: String): String {
-        val dotIndex = fileName.lastIndexOf('.')
-        if (dotIndex <= 0 || dotIndex == fileName.length - 1) {
-            throw BusinessException(FileErrorCode.INVALID_FILE_NAME)
+    private fun extractExtension(contentType: String): String =
+        when (contentType.lowercase()) {
+            "image/png" -> ".png"
+            "image/jpeg" -> ".jpg"
+            "model/stl" -> ".stl"
+            else -> throw BusinessException(CreationErrorCode.UNSUPPORTED_CONTENT_TYPE)
         }
-        return fileName.substring(dotIndex)
-    }
 }

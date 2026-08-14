@@ -9,7 +9,6 @@ import com.meotsa.creation.dto.response.JobStatusResponse
 import com.meotsa.creation.entity.Job
 import com.meotsa.creation.entity.JobStatus
 import com.meotsa.creation.exception.CreationErrorCode
-import com.meotsa.creation.exception.FileErrorCode
 import com.meotsa.creation.repository.CreationRepository
 import com.meotsa.creation.repository.JobRepository
 import com.meotsa.global.config.AwsProperties
@@ -109,7 +108,7 @@ class ModelService(
 
         val modelKey =
             request.modelKey
-                ?: throw BusinessException(FileErrorCode.MISSING_RESULT_FILE)
+                ?: throw BusinessException(CreationErrorCode.MISSING_RESULT_FILE)
 
         // Todo: Nullable -> non-null 타입 변환 필요
         job.complete(modelKey, request.structureCheck, request.widthCheck, request.expectedFee)
