@@ -1,8 +1,8 @@
 package com.meotsa.creation.controller
 
 import com.meotsa.creation.docs.ImageSwaggerSpec
-import com.meotsa.creation.dto.request.StyledImageCreateRequest
-import com.meotsa.creation.dto.response.StyledImageCreateResponse
+import com.meotsa.creation.dto.request.StylizedImageCreateRequest
+import com.meotsa.creation.dto.response.StylizedImageResponse
 import com.meotsa.creation.service.ImageService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,24 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/creations/{creationId}")
+@RequestMapping("/creations/{creationId}/stylized-images")
 class ImageController(
     private val imageService: ImageService,
 ) : ImageSwaggerSpec {
-    @PostMapping("/styled-image")
-    override fun createStyledImage(
+    @PostMapping
+    override fun createStylizedImage(
         @PathVariable creationId: Long,
-        @RequestBody request: StyledImageCreateRequest,
-    ): ResponseEntity<StyledImageCreateResponse> =
+        @RequestBody request: StylizedImageCreateRequest,
+    ): ResponseEntity<StylizedImageResponse> =
         ResponseEntity
             .ok()
-            .body(imageService.createStyledImage(creationId, request))
+            .body(imageService.createStylizedImage(creationId, request))
 
-    @PostMapping("/styled-image/retry")
-    override fun retryStyledImage(
+    @PostMapping("/retry")
+    override fun retryStylizedImage(
         @PathVariable creationId: Long,
-    ): ResponseEntity<StyledImageCreateResponse> =
+    ): ResponseEntity<StylizedImageResponse> =
         ResponseEntity
             .ok()
-            .body(imageService.retryStyledImage(creationId))
+            .body(imageService.retryStylizedImage(creationId))
 }

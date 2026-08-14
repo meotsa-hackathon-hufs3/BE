@@ -43,7 +43,7 @@ class FileService(
                 .build()
 
         val uploadUrl = s3Presigner.presignPutObject(presignRequest).url().toString()
-        val fileUrl = buildFileUrl(key)
+        val fileUrl = awsProperties.cloudfront.urlOf(key)
 
         // Todo: 사용자 정보 추가
         fileRepository.save(
@@ -65,10 +65,8 @@ class FileService(
         val file =
             fileRepository.findByS3Key(key)
                 ?: throw BusinessException(FileErrorCode.FILE_NOT_FOUND)
-        return FileUrlResponse(buildFileUrl(file.s3Key))
+        return FileUrlResponse(awsProperties.cloudfront.urlOf(file.s3Key))
     }
-
-    private fun buildFileUrl(key: String): String = "https://${awsProperties.cloudfront.domain}/$key"
 
     private fun extractExtension(fileName: String): String {
         val dotIndex = fileName.lastIndexOf('.')

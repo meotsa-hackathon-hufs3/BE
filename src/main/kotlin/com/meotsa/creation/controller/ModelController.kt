@@ -1,12 +1,12 @@
 package com.meotsa.creation.controller
 
+import com.meotsa.creation.docs.ModelSwaggerSpec
 import com.meotsa.creation.dto.request.JobCreateRequest
 import com.meotsa.creation.dto.request.JobResultRequest
 import com.meotsa.creation.dto.response.JobCreateResponse
 import com.meotsa.creation.dto.response.JobStatusResponse
-import com.meotsa.creation.service.JobService
+import com.meotsa.creation.service.ModelService
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,34 +16,38 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/jobs")
-class JobController(
-    private val jobService: JobService,
-) {
+@RequestMapping("/creations/{creationId}/models")
+class ModelController(
+    private val modelService: ModelService,
+) : ModelSwaggerSpec {
+    // Todo: 데모 때는 admin만 열어두기
     @PostMapping
-    fun createJob(
+    override fun createJob(
+        @PathVariable creationId: Long,
         @Valid @RequestBody request: JobCreateRequest,
     ): ResponseEntity<JobCreateResponse> =
         ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(jobService.createJob(request.key))
+            .ok()
+            .body(modelService.createJob(creationId, request))
 
     @GetMapping("/{jobId}")
-    fun getJob(
-        @PathVariable("jobId") jobId: Long,
+    override fun getJob(
+        @PathVariable creationId: Long,
+        @PathVariable jobId: Long,
     ): ResponseEntity<JobStatusResponse> =
         ResponseEntity
             .ok()
-            .body(jobService.getJobStatus(jobId))
+            .body(modelService.getJobStatus(creationId, jobId))
 
     @PostMapping("/{jobId}/result")
-    fun registerJobResult(
-        @PathVariable("jobId") jobId: Long,
+    override fun registerJobResult(
+        @PathVariable creationId: Long,
+        @PathVariable jobId: Long,
         @RequestBody request: JobResultRequest,
     ): ResponseEntity<Void> {
-        jobService.registerJobResult(jobId, request)
+        modelService.registerJobResult(creationId, jobId, request)
         return ResponseEntity
-            .status(HttpStatus.CREATED)
+            .ok()
             .build()
     }
 }

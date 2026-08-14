@@ -1,6 +1,7 @@
 package com.meotsa.creation.entity
 
 import jakarta.persistence.Column
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -25,6 +26,12 @@ class Creation {
     @Column(name = "model_key")
     var modelKey: String? = null
 
+    @Embedded
+    var option: ModelOption? = null
+
+    @Column
+    var expectedFee: Int? = null
+
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
@@ -46,5 +53,15 @@ class Creation {
 
     fun reStylize(stylizedImageKey: String) {
         this.stylizedImageKey = stylizedImageKey
+    }
+
+    fun completeModel(
+        modelKey: String,
+        option: ModelOption,
+        expectedFee: Int?,
+    ) {
+        this.modelKey = modelKey
+        this.option = option
+        this.expectedFee = expectedFee
     }
 }

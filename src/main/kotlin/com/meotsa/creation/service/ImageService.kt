@@ -1,7 +1,7 @@
 package com.meotsa.creation.service
 
-import com.meotsa.creation.dto.request.StyledImageCreateRequest
-import com.meotsa.creation.dto.response.StyledImageCreateResponse
+import com.meotsa.creation.dto.request.StylizedImageCreateRequest
+import com.meotsa.creation.dto.response.StylizedImageResponse
 import com.meotsa.creation.exception.CreationErrorCode
 import com.meotsa.creation.repository.CreationRepository
 import com.meotsa.global.config.AwsProperties
@@ -18,26 +18,25 @@ class ImageService(
     private val awsProperties: AwsProperties,
 ) {
     @Transactional
-    fun createStyledImage(
+    fun createStylizedImage(
         creationId: Long,
-        request: StyledImageCreateRequest,
-    ): StyledImageCreateResponse {
+        request: StylizedImageCreateRequest,
+    ): StylizedImageResponse {
         val creation =
             creationRepository.findByIdOrNull(creationId)
                 ?: throw BusinessException(CreationErrorCode.CREATION_NOT_FOUND)
 
-        val stylizedImageKey = "StylizedImage_${UUID.randomUUID().toString().take(8)}"
-        // TODO: originImageKey 검증
+        val stylizedImageKey = generateStylizedImageKey(creationId)
         // TODO: AI API로 StylizedImage 생성
         creation.stylize(request.originalImageKey, stylizedImageKey)
 
-        return StyledImageCreateResponse(
-            buildDownloadUrl(creationId, stylizedImageKey),
+        return StylizedImageResponse(
+            awsProperties.cloudfront.urlOf(stylizedImageKey),
         )
     }
 
     @Transactional
-    fun retryStyledImage(creationId: Long): StyledImageCreateResponse {
+    fun retryStylizedImage(creationId: Long): StylizedImageResponse {
         val creation =
             creationRepository.findByIdOrNull(creationId)
                 ?: throw BusinessException(CreationErrorCode.CREATION_NOT_FOUND)
@@ -45,18 +44,15 @@ class ImageService(
         creation.originalImageKey
             ?: throw BusinessException(CreationErrorCode.STYLIZE_NOT_STARTED)
 
-        val stylizedImageKey = "StylizedImage_${UUID.randomUUID().toString().take(8)}"
-        // TODO: originImageKey 검증
+        val stylizedImageKey = generateStylizedImageKey(creationId)
         // TODO: AI API로 StylizedImage 생성
         creation.reStylize(stylizedImageKey)
 
-        return StyledImageCreateResponse(
-            buildDownloadUrl(creationId, stylizedImageKey),
+        return StylizedImageResponse(
+            awsProperties.cloudfront.urlOf(stylizedImageKey),
         )
     }
 
-    private fun buildDownloadUrl(
-        creationId: Long,
-        key: String,
-    ): String = "https://${awsProperties.cloudfront.domain}/creations/$creationId/$key"
+    private fun generateStylizedImageKey(creationId: Long): String =
+        "creations/$creationId/StylizedImage_${UUID.randomUUID().toString().take(8)}"
 }

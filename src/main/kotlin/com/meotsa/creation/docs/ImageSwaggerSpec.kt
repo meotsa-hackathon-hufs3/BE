@@ -1,7 +1,7 @@
 package com.meotsa.creation.docs
 
-import com.meotsa.creation.dto.request.StyledImageCreateRequest
-import com.meotsa.creation.dto.response.StyledImageCreateResponse
+import com.meotsa.creation.dto.request.StylizedImageCreateRequest
+import com.meotsa.creation.dto.response.StylizedImageResponse
 import com.meotsa.global.exception.ErrorResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -28,10 +28,10 @@ interface ImageSwaggerSpec {
             description = "변환 성공",
             content = [
                 Content(
-                    schema = Schema(implementation = StyledImageCreateResponse::class),
+                    schema = Schema(implementation = StylizedImageResponse::class),
                     examples = [
                         ExampleObject(
-                            value = """{"styledImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_6f1c2a3e"}""",
+                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_6f1c2a3e"}""",
                         ),
                     ],
                 ),
@@ -51,11 +51,11 @@ interface ImageSwaggerSpec {
         ),
     )
     @SecurityRequirements
-    fun createStyledImage(
+    fun createStylizedImage(
         @Parameter(description = "생성 작업 ID", required = true, example = "1")
         creationId: Long,
-        request: StyledImageCreateRequest,
-    ): ResponseEntity<StyledImageCreateResponse>
+        request: StylizedImageCreateRequest,
+    ): ResponseEntity<StylizedImageResponse>
 
     @Operation(
         summary = "이미지 스타일 변환 재시도",
@@ -68,10 +68,10 @@ interface ImageSwaggerSpec {
             description = "재변환 성공",
             content = [
                 Content(
-                    schema = Schema(implementation = StyledImageCreateResponse::class),
+                    schema = Schema(implementation = StylizedImageResponse::class),
                     examples = [
                         ExampleObject(
-                            value = """{"styledImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_2c9e5b71"}""",
+                            value = """{"stylizedImageUrl": "https://d15xvovmn68oyr.cloudfront.net/creations/1/StylizedImage_2c9e5b71"}""",
                         ),
                     ],
                 ),
@@ -96,15 +96,15 @@ interface ImageSwaggerSpec {
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
                     examples = [
-                        ExampleObject(value = """{"code": "STYLIZE_NOT_STARTED", "message": "아직 이미지 변환이 시작되지 않았습니다"}"""),
+                        ExampleObject(value = """{"code": "STYLIZE_NOT_STARTED", "message": "이미지 변환이 시작되지 않았습니다"}"""),
                     ],
                 ),
             ],
         ),
     )
     @SecurityRequirements
-    fun retryStyledImage(
+    fun retryStylizedImage(
         @Parameter(description = "생성 작업 ID", required = true, example = "1")
         creationId: Long,
-    ): ResponseEntity<StyledImageCreateResponse>
+    ): ResponseEntity<StylizedImageResponse>
 }
