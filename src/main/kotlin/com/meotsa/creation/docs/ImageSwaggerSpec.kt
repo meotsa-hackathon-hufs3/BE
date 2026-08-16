@@ -1,6 +1,7 @@
 package com.meotsa.creation.docs
 
 import com.meotsa.creation.dto.request.StylizedImageCreateRequest
+import com.meotsa.creation.dto.request.StylizedImageRetryRequest
 import com.meotsa.creation.dto.response.StylizedImageResponse
 import com.meotsa.global.exception.ErrorResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -49,6 +50,18 @@ interface ImageSwaggerSpec {
                 ),
             ],
         ),
+        ApiResponse(
+            responseCode = "502",
+            description = "AI 이미지 변환 실패",
+            content = [
+                Content(
+                    schema = Schema(implementation = ErrorResponse::class),
+                    examples = [
+                        ExampleObject(value = """{"code": "STYLIZE_FAILED", "message": "이미지 변환에 실패했습니다"}"""),
+                    ],
+                ),
+            ],
+        ),
     )
     @SecurityRequirements
     fun createStylizedImage(
@@ -60,7 +73,8 @@ interface ImageSwaggerSpec {
     @Operation(
         summary = "이미지 스타일 변환 재시도",
         description =
-            "직전에 사용한 원본 이미지로 스타일 변환을 다시 수행하고 새 결과 이미지의 다운로드 URL을 반환한다.",
+            "직전에 사용한 원본 이미지로 스타일 변환을 다시 수행하고 새 결과 이미지의 다운로드 URL을 반환한다. " +
+                "`prompt`로 이번 재시도에 반영할 추가 요청을 전달할 수 있다 (생략 시 `null`).",
     )
     @ApiResponses(
         ApiResponse(
@@ -101,10 +115,23 @@ interface ImageSwaggerSpec {
                 ),
             ],
         ),
+        ApiResponse(
+            responseCode = "502",
+            description = "AI 이미지 변환 실패",
+            content = [
+                Content(
+                    schema = Schema(implementation = ErrorResponse::class),
+                    examples = [
+                        ExampleObject(value = """{"code": "STYLIZE_FAILED", "message": "이미지 변환에 실패했습니다"}"""),
+                    ],
+                ),
+            ],
+        ),
     )
     @SecurityRequirements
     fun retryStylizedImage(
         @Parameter(description = "생성 작업 ID", required = true, example = "1")
         creationId: Long,
+        request: StylizedImageRetryRequest,
     ): ResponseEntity<StylizedImageResponse>
 }

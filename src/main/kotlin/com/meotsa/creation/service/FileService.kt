@@ -8,6 +8,9 @@ import com.meotsa.global.config.AwsProperties
 import com.meotsa.global.exception.BusinessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
@@ -18,6 +21,7 @@ import java.util.UUID
 @Transactional(readOnly = true)
 class FileService(
     private val s3Presigner: S3Presigner,
+    private val s3Client: S3Client,
     private val awsProperties: AwsProperties,
 ) {
     fun createPresignedUpload(request: PresignedUploadRequest): PresignedUploadResponse {
@@ -55,6 +59,33 @@ class FileService(
             key = key,
             fileUrl = fileUrl,
         )
+    }
+
+    fun download(key: String): ByteArray {
+        val request =
+            GetObjectRequest
+                .builder()
+                .bucket(awsProperties.s3.bucket)
+                .key(key)
+                .build()
+
+        return s3Client.getObjectAsBytes(request).asByteArray()
+    }
+
+    fun upload(
+        key: String,
+        bytes: ByteArray,
+        contentType: String,
+    ) {
+        val request =
+            PutObjectRequest
+                .builder()
+                .bucket(awsProperties.s3.bucket)
+                .key(key)
+                .contentType(contentType)
+                .build()
+
+        s3Client.putObject(request, RequestBody.fromBytes(bytes))
     }
 
     private fun extractExtension(contentType: String): String =

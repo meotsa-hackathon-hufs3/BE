@@ -13,6 +13,7 @@ enum class CreationErrorCode(
 
     STYLIZE_NOT_STARTED(HttpStatus.CONFLICT, "이미지 변환이 시작되지 않았습니다"),
     STYLIZE_NOT_DONE(HttpStatus.CONFLICT, "이미지 변환이 완료되지 않았습니다"),
+    STYLIZE_FAILED(HttpStatus.BAD_GATEWAY, "이미지 변환에 실패했습니다"),
 
     JOB_NOT_FOUND(HttpStatus.NOT_FOUND, "모델 작업을 찾을 수 없습니다"),
     JOB_CREATION_MISMATCH(HttpStatus.NOT_FOUND, "해당 생성 작업에 속한 모델 작업이 아닙니다"),

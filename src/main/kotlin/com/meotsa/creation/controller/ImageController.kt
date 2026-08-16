@@ -2,6 +2,7 @@ package com.meotsa.creation.controller
 
 import com.meotsa.creation.docs.ImageSwaggerSpec
 import com.meotsa.creation.dto.request.StylizedImageCreateRequest
+import com.meotsa.creation.dto.request.StylizedImageRetryRequest
 import com.meotsa.creation.dto.response.StylizedImageResponse
 import com.meotsa.creation.service.ImageService
 import org.springframework.http.ResponseEntity
@@ -28,8 +29,9 @@ class ImageController(
     @PostMapping("/retry")
     override fun retryStylizedImage(
         @PathVariable creationId: Long,
+        @RequestBody request: StylizedImageRetryRequest,
     ): ResponseEntity<StylizedImageResponse> =
         ResponseEntity
             .ok()
-            .body(imageService.retryStylizedImage(creationId))
+            .body(imageService.retryStylizedImage(creationId, request))
 }

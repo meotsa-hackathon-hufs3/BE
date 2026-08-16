@@ -7,6 +7,7 @@
 ```
 com.meotsa/
 ├── global/
+│   ├── client/         # 외부 API 클라이언트
 │   ├── config/         # 설정 클래스
 │   ├── docs/           # 공통 Swagger 애노테이션
 │   ├── exception/      # 전역 예외 처리
