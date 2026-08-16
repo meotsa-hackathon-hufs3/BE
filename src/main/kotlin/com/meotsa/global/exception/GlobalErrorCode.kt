@@ -12,4 +12,6 @@ enum class GlobalErrorCode(
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다"),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다"),
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다"),
+
+    IMAGE_EDIT_FAILED(HttpStatus.BAD_GATEWAY, "이미지 편집에 실패했습니다"),
 }

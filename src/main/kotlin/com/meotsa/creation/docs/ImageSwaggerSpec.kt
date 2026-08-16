@@ -52,12 +52,12 @@ interface ImageSwaggerSpec {
         ),
         ApiResponse(
             responseCode = "502",
-            description = "AI 이미지 변환 실패",
+            description = "AI 이미지 편집 실패",
             content = [
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
                     examples = [
-                        ExampleObject(value = """{"code": "STYLIZE_FAILED", "message": "이미지 변환에 실패했습니다"}"""),
+                        ExampleObject(value = """{"code": "IMAGE_EDIT_FAILED", "message": "이미지 편집에 실패했습니다"}"""),
                     ],
                 ),
             ],
@@ -117,12 +117,12 @@ interface ImageSwaggerSpec {
         ),
         ApiResponse(
             responseCode = "502",
-            description = "AI 이미지 변환 실패",
+            description = "AI 이미지 편집 실패",
             content = [
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
                     examples = [
-                        ExampleObject(value = """{"code": "STYLIZE_FAILED", "message": "이미지 변환에 실패했습니다"}"""),
+                        ExampleObject(value = """{"code": "IMAGE_EDIT_FAILED", "message": "이미지 편집에 실패했습니다"}"""),
                     ],
                 ),
             ],

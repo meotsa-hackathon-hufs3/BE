@@ -86,9 +86,6 @@ class ImageService(
         return stylizedImageKey
     }
 
-    private fun buildPrompt(userPrompt: String?): String =
-        if (userPrompt.isNullOrBlank()) BASE_PROMPT else "$BASE_PROMPT\n\n추가 요청: $userPrompt"
-
     private fun contentTypeOf(key: String): String =
         when (key.substringAfterLast('.', "").lowercase()) {
             "png" -> "image/png"
@@ -99,6 +96,9 @@ class ImageService(
 
     private fun generateStylizedImageKey(creationId: Long): String =
         "creations/$creationId/stylized_${UUID.randomUUID().toString().take(8)}.png"
+
+    private fun buildPrompt(userPrompt: String?): String =
+        if (userPrompt.isNullOrBlank()) BASE_PROMPT else "$BASE_PROMPT\n\n추가 요청: $userPrompt"
 
     private companion object {
         const val BASE_PROMPT =

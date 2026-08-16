@@ -1,9 +1,9 @@
 package com.meotsa.global.client
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.meotsa.creation.exception.CreationErrorCode
 import com.meotsa.global.config.OpenAiProperties
 import com.meotsa.global.exception.BusinessException
+import com.meotsa.global.exception.GlobalErrorCode
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.MediaType
 import org.springframework.http.client.MultipartBodyBuilder
@@ -44,17 +44,17 @@ class OpenAiImageClient(
                     .retrieve()
                     .body(ImageEditResponse::class.java)
             } catch (e: RestClientException) {
-                throw BusinessException(CreationErrorCode.STYLIZE_FAILED)
+                throw BusinessException(GlobalErrorCode.IMAGE_EDIT_FAILED)
             }
 
         val encoded =
             response?.data?.firstOrNull()?.b64Json
-                ?: throw BusinessException(CreationErrorCode.STYLIZE_FAILED)
+                ?: throw BusinessException(GlobalErrorCode.IMAGE_EDIT_FAILED)
 
         return try {
             Base64.getDecoder().decode(encoded)
         } catch (e: IllegalArgumentException) {
-            throw BusinessException(CreationErrorCode.STYLIZE_FAILED)
+            throw BusinessException(GlobalErrorCode.IMAGE_EDIT_FAILED)
         }
     }
 
