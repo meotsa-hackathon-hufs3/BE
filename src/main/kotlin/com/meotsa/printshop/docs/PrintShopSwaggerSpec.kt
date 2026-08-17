@@ -77,13 +77,32 @@ interface PrintShopSwaggerSpec {
         ),
         ApiResponse(
             responseCode = "409",
-            description = "모델 옵션이 확정되지 않음",
+            description = "견적에 필요한 모델 정보가 확정되지 않음",
             content = [
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
                     examples = [
                         ExampleObject(
+                            name = "옵션 없음",
                             value = """{"code": "MODEL_OPTION_NOT_READY", "message": "모델 옵션이 확정되지 않아 견적을 낼 수 없습니다"}""",
+                        ),
+                        ExampleObject(
+                            name = "형상 정보 없음",
+                            value = """{"code": "MODEL_GEOMETRY_NOT_READY", "message": "모델 형상 정보가 없어 견적을 낼 수 없습니다"}""",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        ApiResponse(
+            responseCode = "500",
+            description = "출력소 견적 설정이 공정 산식과 맞지 않음",
+            content = [
+                Content(
+                    schema = Schema(implementation = ErrorResponse::class),
+                    examples = [
+                        ExampleObject(
+                            value = """{"code": "INVALID_PRINT_SHOP_OPTION", "message": "출력소 견적 설정이 올바르지 않습니다"}""",
                         ),
                     ],
                 ),

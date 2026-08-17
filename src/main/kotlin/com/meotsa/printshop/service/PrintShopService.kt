@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class PrintShopService(
     private val creationRepository: CreationRepository,
     private val printShopRepository: PrintShopRepository,
+    private val quoteCalculator: QuoteCalculator,
 ) {
     fun getEstimates(creationId: Long): List<PrintShopEstimateResponse> {
         val creation =
@@ -24,9 +25,18 @@ class PrintShopService(
         val modelOption =
             creation.option
                 ?: throw BusinessException(PrintShopErrorCode.MODEL_OPTION_NOT_READY)
+        val geometry =
+            creation.geometry
+                ?: throw BusinessException(PrintShopErrorCode.MODEL_GEOMETRY_NOT_READY)
 
         return printShopRepository
             .findOptionsByMaterial(MaterialType.from(modelOption.material))
-            .map { PrintShopEstimateResponse.of(it.printShop, it, printingCost = 0) } // 견적 로직 필요
+            .map {
+                PrintShopEstimateResponse.of(
+                    it.printShop,
+                    it,
+                    quoteCalculator.calculate(geometry, modelOption.amount, it),
+                )
+            }
     }
 }

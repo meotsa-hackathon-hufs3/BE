@@ -31,7 +31,7 @@ class PrintShopOption(
     @Column(nullable = false)
     var pricePerHour: Int,
     @Column(nullable = false)
-    var setupFee: Int,
+    var baseFee: Int,
     @Column(nullable = false)
     var dataFee: Int,
     @Column(nullable = false)
