@@ -14,7 +14,7 @@ import kotlin.math.sin
 private const val VAT_RATE = 0.1
 private const val ROUNDING_UNIT = 1000
 
-// 슬라이싱 가정. 이름은 원본 JS 상수명 그대로다.
+// 부엉이공장 기준 프린터 세팅 가정
 private const val PLA_DENSITY = 1.24 // g/cm^3
 private const val USE_RATIO = 0.5 // FDM 인필
 private const val GRAMS_PER_HOUR = 45 // FDM 토출량
@@ -27,17 +27,10 @@ private data class PrintStats(
 )
 
 /**
- * 산식 출처는 부엉이공장(owlfactory.co.kr) 공개 견적기의 클라이언트 JS 이며 scripts/pricing.py 를
- * 거쳐 옮겼다. 상수·변수 이름은 세 계층을 나란히 놓고 대조할 수 있도록 원본 JS 쪽을 따른다.
+ * 산식 출처는 부엉이공장(owlfactory.co.kr) 공개 견적기
  *
  * 밀도·레이어 두께·노광 시간·VAT·절상 단위는 상수로 두고,
  * 업체별로 갈리는 값만 PrintShopOption 컬럼에 있다.
- *
- * pricing.py 와 의도적으로 다른 곳:
- * - min_price -> minPricePerUnit : 항상 수량에 곱하는 개당 하한이라 이름에 드러낸다
- * - resin_price_per_g -> pricePerGram : FDM·SLA 행이 함께 쓰는 공용 컬럼이다
- * - quote(items) -> calculate(단건) : 모델 하나만 견적하므로 data_fee * len(items) 가 dataFee 다
- * - validate() : 상류에 없는 우리 추가분. 공정별로 산식이 안 쓰는 컬럼을 걸러낸다
  */
 @Component
 class QuoteCalculator {
@@ -60,14 +53,12 @@ class QuoteCalculator {
         }
     }
 
+    // 레진은 변동비의 대부분이 재료비라, pricePerGram 이 비면 unitVariableCost 의 `?: 0` 이
+    // 금액을 조용히 반토막 낸다. 반대로 공정이 안 쓰는 컬럼은 값이 뭐든 결과가 같아 걸러내지 않는다.
     private fun validate(option: PrintShopOption) {
-        val misconfigured =
-            when (option.processType) {
-                ProcessType.FDM -> option.minPricePerUnit != 0
-                ProcessType.SLA -> option.baseFee != 0 || option.pricePerGram == null
-            }
-
-        if (misconfigured) throw BusinessException(PrintShopErrorCode.INVALID_PRINT_SHOP_OPTION)
+        if (option.processType == ProcessType.SLA && option.pricePerGram == null) {
+            throw BusinessException(PrintShopErrorCode.INVALID_PRINT_SHOP_OPTION)
+        }
     }
 
     private fun derive(
