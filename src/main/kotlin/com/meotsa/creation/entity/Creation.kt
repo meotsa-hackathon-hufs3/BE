@@ -29,6 +29,9 @@ class Creation {
     @Embedded
     var option: ModelOption? = null
 
+    @Embedded
+    var geometry: ModelGeometry? = null
+
     @Column
     var expectedFee: Int? = null
 
@@ -58,10 +61,12 @@ class Creation {
     fun completeModel(
         modelKey: String,
         option: ModelOption,
+        geometry: ModelGeometry,
         expectedFee: Int?,
     ) {
         this.modelKey = modelKey
         this.option = option
+        this.geometry = geometry
         this.expectedFee = expectedFee
     }
 }

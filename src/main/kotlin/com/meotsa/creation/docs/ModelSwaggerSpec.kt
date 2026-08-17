@@ -162,19 +162,26 @@ interface ModelSwaggerSpec {
     @Operation(
         summary = "3D 모델 생성 결과 등록",
         description =
-            "모델 생성 워커가 작업 결과를 콜백으로 등록한다.",
+            "모델 생성 워커가 작업 결과를 콜백으로 등록한다. " +
+                "`volumeMm3`·`bboxX`·`bboxY`·`bboxZ`는 출력소 견적 계산에 쓰이는 메시 측정값으로, " +
+                "네 값이 모두 있어야 견적 조회가 가능하다.",
     )
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "결과 등록 성공"),
         ApiResponse(
             responseCode = "400",
-            description = "완료 결과에 모델 키가 없음",
+            description = "완료 결과에 필요한 정보가 없음",
             content = [
                 Content(
                     schema = Schema(implementation = ErrorResponse::class),
                     examples = [
                         ExampleObject(
+                            name = "모델 키 없음",
                             value = """{"code": "MISSING_RESULT_FILE", "message": "완료된 작업에는 결과 파일 정보가 필요합니다"}""",
+                        ),
+                        ExampleObject(
+                            name = "형상 정보 없음",
+                            value = """{"code": "MISSING_RESULT_GEOMETRY", "message": "완료된 작업에는 모델 형상 정보가 필요합니다"}""",
                         ),
                     ],
                 ),

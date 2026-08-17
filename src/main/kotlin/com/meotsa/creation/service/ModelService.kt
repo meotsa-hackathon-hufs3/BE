@@ -109,9 +109,12 @@ class ModelService(
         val modelKey =
             request.modelKey
                 ?: throw BusinessException(CreationErrorCode.MISSING_RESULT_FILE)
+        val geometry =
+            request.toModelGeometry()
+                ?: throw BusinessException(CreationErrorCode.MISSING_RESULT_GEOMETRY)
 
         // Todo: Nullable -> non-null 타입 변환 필요
-        job.complete(modelKey, request.structureCheck, request.widthCheck, request.expectedFee)
-        job.creation.completeModel(modelKey, job.option, job.expectedFee)
+        job.complete(modelKey, geometry, request.structureCheck, request.widthCheck, request.expectedFee)
+        job.creation.completeModel(modelKey, job.option, geometry, job.expectedFee)
     }
 }

@@ -34,6 +34,9 @@ class Job(
     @Column(name = "model_key")
     var modelKey: String? = null
 
+    @Embedded
+    var geometry: ModelGeometry? = null
+
     @Column
     var structureCheck: Boolean? = null
 
@@ -51,12 +54,14 @@ class Job(
 
     fun complete(
         modelKey: String?,
+        geometry: ModelGeometry,
         structureCheck: Boolean?,
         widthCheck: Boolean?,
         expectedFee: Int?,
     ) {
         this.status = JobStatus.COMPLETED
         this.modelKey = modelKey
+        this.geometry = geometry
         this.structureCheck = structureCheck
         this.widthCheck = widthCheck
         this.expectedFee = expectedFee
