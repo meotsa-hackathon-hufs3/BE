@@ -1,4 +1,4 @@
-# meotsa-hackathon-be
+# PETFORM
 
 사진 한 장을 AI로 3D 피규어 스타일로 바꾸고, 3D 모델(STL)까지 생성해 프린트샵 견적을 받아보는 서비스의 백엔드.
 
