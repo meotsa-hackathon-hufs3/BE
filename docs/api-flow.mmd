@@ -1,0 +1,50 @@
+sequenceDiagram
+    autonumber
+    participant C as Web Client
+    participant API as Spring Boot
+    participant S3 as S3 / CloudFront
+    participant AI as OpenAI<br/>gpt-image-2
+    participant Q as SQS FIFO
+    participant W as AI Server
+
+    Note over C,API: 1. 생성 작업 시작
+    C->>API: POST /creations
+    API-->>C: 201 { creationId }
+
+    Note over C,S3: 2. 원본 사진 업로드
+    C->>API: POST /files/presigned-upload<br/>{ creationId, purpose: ORIGINAL_IMAGE, contentType }
+    API-->>C: 201 { uploadUrl, key, fileUrl }
+    C->>S3: PUT uploadUrl (원본 이미지)
+
+    Note over C,AI: 3. AI 스타일 변환 (동기, 수십 초)
+    C->>API: POST /creations/{creationId}/stylized-images<br/>{ originalImageKey, prompt? }
+    API->>S3: 원본 이미지 다운로드
+    API->>AI: POST /images/edits (multipart)
+    AI-->>API: b64 PNG
+    API->>S3: 스타일 이미지 업로드
+    API-->>C: 200 { stylizedImageUrl }
+
+    Note over C,W: 4. 3D 모델 생성 요청 (비동기)
+    C->>API: POST /creations/{creationId}/models<br/>{ productType, size, amount, material, color }
+    API->>API: Job 저장 (PENDING)
+    API->>Q: enqueue JobMessage<br/>(messageGroupId="job", dedupId=jobId)
+    API-->>C: 201 { jobId }
+
+    W->>Q: long polling
+    Q-->>W: JobMessage
+    W->>S3: GET stylizedImageUrl
+
+    loop 상태 폴링
+        C->>API: GET /creations/{creationId}/models/{jobId}
+        API-->>C: 200 { status: PENDING }
+    end
+
+    Note over W,API: 5. 결과 콜백
+    W->>W: image → STL 생성
+    W->>S3: STL 업로드
+    W->>API: POST /creations/{creationId}/models/{jobId}/result<br/>{ status, modelKey, volumeMm3, bbox…, expectedFee }
+    API->>API: Job / Creation 완료 처리
+    API-->>W: 200
+
+    C->>API: GET /creations/{creationId}/models/{jobId}
+    API-->>C: 200 { status: COMPLETED, modelUrl, geometry, expectedFee }
