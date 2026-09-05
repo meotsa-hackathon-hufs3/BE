@@ -79,7 +79,7 @@ class ModelService(
 
         val queuePosition =
             if (job.status == JobStatus.PENDING) {
-                jobRepository.countByStatusAndIdLessThan(JobStatus.PENDING, jobId).toInt()
+                jobRepository.countByStatusAndIdLessThan(JobStatus.PENDING, jobId).toInt() + 1
             } else {
                 0
             }
