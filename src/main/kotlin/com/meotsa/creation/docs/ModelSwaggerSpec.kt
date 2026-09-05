@@ -74,7 +74,8 @@ interface ModelSwaggerSpec {
             "모델 생성 작업의 진행 상태와 요청 옵션을 조회한다. " +
                 "`status`가 `COMPLETED`일 때만 `modelUrl`·`structureCheck`·`widthCheck`·`expectedFee`가 채워지고, " +
                 "`FAILED`일 때는 `error`가 채워진다. " +
-                "`queuePosition`은 이 작업보다 앞에 대기 중인 작업 수, `estimatedSeconds`는 예상 대기 시간(초)이며, " +
+                "`queuePosition`은 이 작업보다 앞에 대기 중인 작업 수, " +
+                "`estimatedSeconds`는 앞선 작업과 이 작업의 처리 시간을 합친 예상 완료 시간(초)이며, " +
                 "`PENDING`이 아닌 경우 둘 다 `0`이다.",
     )
     @ApiResponses(
@@ -91,7 +92,7 @@ interface ModelSwaggerSpec {
                                 {
                                   "status": "PENDING",
                                   "queuePosition": 2,
-                                  "estimatedSeconds": 240,
+                                  "estimatedSeconds": 360,
                                   "productType": "FIGURE",
                                   "size": 50,
                                   "amount": 1,

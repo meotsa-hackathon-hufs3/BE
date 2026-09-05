@@ -84,12 +84,19 @@ class ModelService(
                 0
             }
 
+        val estimatedSeconds =
+            if (job.status == JobStatus.PENDING) {
+                (queuePosition + 1) * averageJobSeconds
+            } else {
+                0
+            }
+
         val modelUrl =
             job.modelKey
                 ?.takeIf { job.status == JobStatus.COMPLETED }
                 ?.let { awsProperties.cloudfront.urlOf(it) }
 
-        return JobStatusResponse.of(job, queuePosition, queuePosition * averageJobSeconds, modelUrl)
+        return JobStatusResponse.of(job, queuePosition, estimatedSeconds, modelUrl)
     }
 
     @Transactional
