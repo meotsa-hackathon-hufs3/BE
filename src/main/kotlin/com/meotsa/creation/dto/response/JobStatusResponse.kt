@@ -8,6 +8,8 @@ import com.meotsa.creation.entity.ProductType
 
 data class JobStatusResponse(
     val status: JobStatus,
+    val queuePosition: Int,
+    val estimatedSeconds: Int,
     val productType: ProductType,
     val size: Int,
     val amount: Int,
@@ -22,9 +24,13 @@ data class JobStatusResponse(
     companion object {
         fun of(
             job: Job,
+            queuePosition: Int,
+            estimatedSeconds: Int,
             modelUrl: String?,
         ) = JobStatusResponse(
             status = job.status,
+            queuePosition = queuePosition,
+            estimatedSeconds = estimatedSeconds,
             productType = job.option.productType,
             size = job.option.size,
             amount = job.option.amount,

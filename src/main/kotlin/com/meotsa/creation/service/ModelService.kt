@@ -27,6 +27,8 @@ class ModelService(
     private val awsProperties: AwsProperties,
     private val objectMapper: ObjectMapper,
 ) {
+    private val averageJobSeconds = 120
+
     @Transactional
     fun createJob(
         creationId: Long,
@@ -75,12 +77,19 @@ class ModelService(
             throw BusinessException(CreationErrorCode.JOB_CREATION_MISMATCH)
         }
 
+        val queuePosition =
+            if (job.status == JobStatus.PENDING) {
+                jobRepository.countByStatusAndIdLessThan(JobStatus.PENDING, jobId).toInt()
+            } else {
+                0
+            }
+
         val modelUrl =
             job.modelKey
                 ?.takeIf { job.status == JobStatus.COMPLETED }
                 ?.let { awsProperties.cloudfront.urlOf(it) }
 
-        return JobStatusResponse.of(job, modelUrl)
+        return JobStatusResponse.of(job, queuePosition, queuePosition * averageJobSeconds, modelUrl)
     }
 
     @Transactional
