@@ -86,7 +86,7 @@ class ModelService(
 
         val estimatedSeconds =
             if (job.status == JobStatus.PENDING) {
-                (queuePosition + 1) * averageJobSeconds
+                (queuePosition) * averageJobSeconds
             } else {
                 0
             }
